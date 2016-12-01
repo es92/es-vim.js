@@ -7,19 +7,30 @@
     <style>
       canvas {
         border: 1px solid black;
+        width: 100%;
+        height: 100%;
       }
 
       #vimjs-font-test {
         padding: 0;
         display: inline-block;
       }
+
+      #canvas-parent {
+        display: inline-block;
+        width: 800px;
+        height: 400px;
+      }
     </style>
   </head>
   <body>
-    <canvas width=800 height=400 tabindex='1'></canvas>
+    <div id="canvas-parent">
+      <canvas width=800 height=400 tabindex='1'></canvas>
+    </div>
     <script src="vim.js"></script>
     <script src="vim_canvas_ui.js"></script>
     <script src="vim_loader.js"></script>
+    <script src="tests.js"></script>
     <script>
       load_vim(function(vim, start){
         vim.FS_createDataFile('/home/web_user', 'test', true, true, true);
@@ -27,8 +38,10 @@
         start('/home/web_user/test', function(){
           var canvas = document.getElementsByTagName('canvas')[0];
           var vc = new VimCanvas(vim, canvas);
+          window.vc = vc;
         });
       });
+
     </script>
   </body>
 </html>

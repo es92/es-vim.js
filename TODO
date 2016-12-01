@@ -1,12 +1,12 @@
 
-essential-ux
+essential ux
   - filesystem mirroring (browserFS)
   - make it easy to set the default vimrc
   - clipboard ui support
   - merge vim_loader.js into vim.js
   - add more colorschemes, syntaxes
 
-essential-dev
+essential dev
   - get building from current unmodified vim src
   - fix load order (register callbacks before init)
 

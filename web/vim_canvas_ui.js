@@ -1,7 +1,7 @@
 
 
 
-function VimCanvas(vim, canvas){
+function VimCanvas(vim, canvas, config){
   var s = {
     vim: vim,
     canvas: canvas,
@@ -12,7 +12,11 @@ function VimCanvas(vim, canvas){
     fg_color: null,
     bg_color: null,
     sg_color: null,
+    resize: resize,
   }
+
+  if (config == null)
+    config = {}
 
   var font_node = document.createElement('span');
   font_node.style.display = 'inline-block';
@@ -26,8 +30,58 @@ function VimCanvas(vim, canvas){
 
   s.font_node = font_node;
 
+  window.vim = vim;
+
   var page = canvas.getContext('2d');
 
+  // ===============================================================
+  //  API
+  // ===============================================================
+
+  function resize(w, h){
+    var state = page.getImageData(0, 0, canvas.width, canvas.height);
+    canvas.width = w;
+    canvas.height = h;
+    page.putImageData(state, 0, 0);
+    vim.em_vimjs.gui_resize_shell(w, h);
+  }
+
+  // ===============================================================
+  //  config related
+  // ===============================================================
+
+  function resize_to_size(){
+    resize(canvas.clientWidth, canvas.clientHeight);
+  }
+
+  function check_resize(){
+    if (canvas.clientWidth !== s.last_width || s.last_height !== canvas.client_height){
+      resize_to_size();
+    }
+
+    s.last_width = canvas.clientWidth;
+    s.last_height = canvas.clientHeight;
+  }
+
+  function add_mutation_resize_check(elem){
+    (new MutationObserver(function(mutations){
+        if(mutations.length > 0) { 
+          check_resize(); 
+        }
+    })).observe(elem, { attributes : true, attributeFilter : ['style'] });
+  }
+
+  if (!config.fix_size){
+    window.addEventListener('resize', check_resize);
+    var elem = canvas;
+    do {
+      add_mutation_resize_check(elem);
+      elem = elem.parentNode;
+    } while (elem != null);
+  }
+  
+  // ===============================================================
+  //  key events
   // ===============================================================
   
   canvas.addEventListener('keydown', function(e){
@@ -46,13 +100,8 @@ function VimCanvas(vim, canvas){
   });
 
   // ===============================================================
-  //
-  vim.em_vimjs.on('draw_part_cursor', function(row, col, width, height){
-    page.fillStyle = s.fg_color;
-    var cw = s.char_width;
-    var ch = s.char_height;
-    page.fillRect(col * cw, (row + 1) * ch - height, width, height);
-  });
+  //  vim.js api implementation
+  // ===============================================================
 
   vim.em_vimjs.on('get_window_width', function(){
     return canvas.width;
@@ -88,7 +137,16 @@ function VimCanvas(vim, canvas){
   });
 
   // ===============================================================
-  //
+  //  canvas methods
+  // ===============================================================
+
+  vim.em_vimjs.on('draw_part_cursor', function(row, col, width, height){
+    page.fillStyle = s.fg_color;
+    var cw = s.char_width;
+    var ch = s.char_height;
+    page.fillRect(col * cw, (row + 1) * ch - height, width, height);
+  });
+ 
   vim.em_vimjs.on('insert_lines', function(num_lines, row1, row2, col1, col2){
     var cw = s.char_width;
     var ch = s.char_height;
@@ -150,6 +208,8 @@ function VimCanvas(vim, canvas){
     var w = len * s.char_width;
     page.fillText(str, x, y, w);
   });
+
+  // ===============================================================
 
   return s;
 }
