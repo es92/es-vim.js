@@ -1,6 +1,5 @@
 
 essential-ux
-  - fix crashes on no file
   - filesystem mirroring (browserFS)
   - make it easy to set the default vimrc
   - clipboard ui support
