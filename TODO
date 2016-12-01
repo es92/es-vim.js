@@ -1,9 +1,11 @@
 
 essential-ux
-  - canvas ui
   - clipboard ui support
   - filesystem mirroring (browserFS)
   - merge vim.js and vim_loader.js into vim_lib.js
+  - add more colorschemes, syntaxes
+  - make it easy to set the default vimrc
+  - crashes on no file
 
 essential-dev
   - get building from current unmodified vim src

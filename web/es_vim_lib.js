@@ -37,6 +37,7 @@ var LibraryVIM = {
 
     special_keys: [],
     special_keys_namemap: {},
+    keys_to_intercept_upon_keydown: {},
     color_map: {},
 
     dbg: true,
@@ -56,14 +57,17 @@ var LibraryVIM = {
     emit_apply: function(name, args){
       var args = Array.prototype.slice.call(args);
       args.unshift(name)
-      vimjs.emit.apply(null, args);
+      return vimjs.emit.apply(null, args);
     },
     emit: function(name){
       var args = Array.prototype.slice.call(arguments).slice(1);
+      var outs = []
       if (name in vimjs._callbacks){
         for (var id in vimjs._callbacks[name]){
-          vimjs._callbacks[name][id].apply(null, args);
+          var out = vimjs._callbacks[name][id].apply(null, args);
+          outs.push(out);
         }
+        return outs[0];
       }
       else {
         console.log('dropped', name, args);
@@ -331,6 +335,7 @@ var LibraryVIM = {
     ].forEach(function(k) {
       keys_to_intercept_upon_keydown[k] = 1;
     });
+    vimjs.keys_to_intercept_upon_keydown = keys_to_intercept_upon_keydown;
   },
   
   vimjs_prepare_exit: function() {
@@ -359,7 +364,7 @@ var LibraryVIM = {
   },
 
   vimjs_get_window_width: function() {
-    return vimjs.emit_apply('get_window_width', arguments)
+    return vimjs.emit_apply('get_window_width', arguments);
   },
 
   vimjs_get_window_height: function() {
@@ -376,8 +381,10 @@ var LibraryVIM = {
       vimjs.emit_apply('clear_block', [ row, col, row, col + len - 1 ])
     }
     var bold = flags & 0x02;
+    var underline = flags & 0x04;
+    var undercurl = flags & 0x08;
     var s = Pointer_stringify(s, len);
-    vimjs.emit_apply('draw_string', [s, bold, row, col, len, flags ]);
+    vimjs.emit_apply('draw_string', [s, bold, underline, undercurl, row, col, len, flags ]);
   },
 
   vimjs_clear_block: function(row1, col1, row2, col2) {
@@ -390,7 +397,7 @@ var LibraryVIM = {
 
   vimjs_delete_lines: function(num_lines, row1, row2, col1, col2) {
     vimjs.emit_apply('delete_lines', arguments)
-    vimjs.emit('clear_block', row1, col1, row1 + num_lines - 1, col2)
+    vimjs.emit('clear_block', row2 - num_lines + 1, col1, row2, col2);
   },
 
   vimjs_insert_lines: function(num_lines, row1, row2, col1, col2) {
@@ -428,9 +435,10 @@ var LibraryVIM = {
   },
 
   vimjs_get_char_width: function() {
-    return vimjs.char_width;
+    return vimjs.emit_apply('get_char_width', arguments)
   },
   vimjs_get_char_height: function() {
+    return vimjs.emit_apply('get_char_height', arguments)
     return vimjs.char_height;
   },
 

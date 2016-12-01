@@ -8,17 +8,22 @@
       canvas {
         border: 1px solid black;
       }
+
+      #vimjs-font-test {
+        padding: 0;
+        display: inline-block;
+      }
     </style>
   </head>
   <body>
-    <canvas width=800 height=400></canvas>
+    <canvas width=800 height=400 tabindex='1'></canvas>
     <script src="vim.js"></script>
     <script src="vim_canvas_ui.js"></script>
     <script src="vim_loader.js"></script>
     <script>
-      new Promise(load_vim).then(function(vim){ 
+      load_vim(function(vim){
         var canvas = document.getElementsByTagName('canvas')[0];
-        var vc = new VimCanvas(canvas, vim);
+        var vc = new VimCanvas(vim, canvas);
       });
     </script>
   </body>
