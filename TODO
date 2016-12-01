@@ -3,11 +3,13 @@ essential-ux
   - canvas ui
   - clipboard ui support
   - filesystem mirroring (browserFS)
+  - merge vim.js and vim_loader.js into vim_lib.js
 
 essential-dev
   - get building from current unmodified vim src
   - fix load order (register callbacks before init)
 
 extra
+  - make load location of vim.js.mem and vim.js.binary configurable
   - mouse support
   - get .vim files from a vim distribution (remove from repo)
