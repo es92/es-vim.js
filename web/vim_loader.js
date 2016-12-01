@@ -14,17 +14,34 @@ function load_vim(resolve, reject){
     };
     xhr.send(null);
   }).then(function(emterpreterBinaryData){
+
+    var onload = null;
+
+    var fs_ready = false;
+    var runtime_ready = false;
+    var called_main = false;
+    var file = null;
+
+    function maybeCallMain(){
+      if (!called_main && fs_ready && runtime_ready){
+        called_main = true;
+        if (file != null)
+          vimjs.callMain([file]);
+        else
+          vimjs.callMain();
+      }
+    }
+
     var vimjs = VimJS({
       emterpreterFile: emterpreterBinaryData,
-      noInitialRun: false,
+      noInitialRun: true,
       noExitRuntime: true,
       arguments: ['/usr/local/share/vim/example.js'],
       set_vimjs: function(em_vimjs){
         vimjs.em_vimjs = em_vimjs
-        resolve(vimjs);
+        onload(vimjs);
       },
       preRun: [ function() { 
-
       } ],
       postRun: [],
       print: function() { 
@@ -45,6 +62,18 @@ function load_vim(resolve, reject){
           console.log(arguments);
         }
       },
+    });
+
+    vimjs.onRuntimeInitialized = function(){
+      runtime_ready = true;
+      maybeCallMain();
+    }
+
+    resolve(vimjs, function load(_file, _onload){
+      onload = _onload;
+      file = _file;
+      fs_ready = true;
+      maybeCallMain();
     });
   });
 }
