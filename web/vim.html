@@ -21,16 +21,27 @@
         width: 800px;
         height: 400px;
       }
+
+      vimtextarea {
+        display: inline-block;
+        height: 200px;
+        width: 400px;
+      }
+
     </style>
   </head>
   <body>
     <div id="canvas-parent">
       <canvas width=800 height=400 tabindex='1'></canvas>
     </div>
+    <vimtextarea></vimtextarea>
+
     <script src="vim.js"></script>
     <script src="vim_canvas_ui.js"></script>
     <script src="vim_loader.js"></script>
     <script src="tests.js"></script>
+    <script src="vim_textarea_lib.js"></script>
+    <script src="vim_textarea.js"></script>
     <script>
       load_vim(function(vim, start){
         vim.FS_createDataFile('/home/web_user', 'test', true, true, true);
@@ -41,7 +52,6 @@
           window.vc = vc;
         });
       });
-
     </script>
   </body>
 </html>

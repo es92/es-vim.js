@@ -11,6 +11,7 @@ essential dev
   - fix load order (register callbacks before init)
 
 extra
+  - match full textarea api
   - make load location of vim.js.mem and vim.js.binary configurable
   - mouse support
   - get .vim files from a vim distribution (remove from repo)

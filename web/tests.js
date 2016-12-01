@@ -12,3 +12,10 @@ function resize_test(){
   }
 }
 //setTimeout(resize_test, 1000);
+
+
+function check_vim_textarea_contents(){
+  var textarea = document.getElementsByTagName('vimtextarea')[0];
+  console.log(textarea.value);
+
+}
