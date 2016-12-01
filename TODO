@@ -1,0 +1,13 @@
+
+essential-ux
+  - canvas ui
+  - clipboard ui support
+  - filesystem mirroring (browserFS)
+
+essential-dev
+  - get building from current unmodified vim src
+  - fix load order (register callbacks before init)
+
+extra
+  - mouse support
+  - get .vim files from a vim distribution (remove from repo)
