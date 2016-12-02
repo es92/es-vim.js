@@ -1,6 +1,10 @@
 #!/bin/bash
 
 cp web/es_vim_lib.js native/vim.js/web/es_vim_lib.js
+
+rm -rf native/vim.js/web/usr
+cp -r web/usr native/vim.js/web/usr
+
 cd native/vim.js
 cp ../link.sh ./link.sh
 ./link.sh

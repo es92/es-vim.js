@@ -18,6 +18,12 @@ app.post('/call', function(req, res){
 
   var error = null;
 
+  console.log('===============================================');
+  if (name !== 'writeSync' && name !== 'readSync')
+    console.log(type, name, args);
+  else
+    console.log(type, name, args.length);
+
   try {
     if (type === 'fs'){
       if (name === 'utimesSync'){
@@ -56,6 +62,9 @@ app.post('/call', function(req, res){
     console.log(e);
     var error = e;
   }
+
+  if (name !== 'readSync')
+    console.log(result);
 
   res.type('text/plain');
   res.write(JSON.stringify({ result: result, error: error }));

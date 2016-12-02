@@ -2,5 +2,3 @@
 native/clean-vim.js
 native/vim.js
 web/vim.bc
-web/vim.js.binary
-web/vim.js.mem
