@@ -11,6 +11,6 @@ cp ../link.sh ./link.sh
 
 cd ../..
 
-cp native/vim.js/web/vim.js web/vim.js
+cp native/vim.js/web/vim.js web/em_vim.js
 cp native/vim.js/web/vim.js.mem web/vim.js.mem
 cp native/vim.js/web/vim.js.binary web/vim.js.binary
