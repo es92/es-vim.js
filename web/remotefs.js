@@ -1,19 +1,45 @@
 
-// FIXME the way this resolves things synchronously is bad...
-
 function RemoteFS(url, FS, PATH, ERRNO_CODES){
 
+  var last_call = {}
+
+  var cachedFns = [
+    'lstatSync',
+    'readdirSync',
+    'readlinkSync',
+  ]
+
   function net_call(type, name, args){
+    if (cachedFns.indexOf(name) !== -1){
+      var key = JSON.stringify([ type, name, args ]);
+      if (last_call.key === key){
+        return last_call.result;
+      }
+    }
+
     var req = new XMLHttpRequest();
     req.open("POST", url,  false);
     req.setRequestHeader("Content-Type", "application/json;charset=UTF-8");
     var data = { type: type, name: name, args: JSON.stringify(Array.prototype.slice.call(args)) }
     req.send(JSON.stringify(data));
     var res = JSON.parse(req.responseText);
-    if (res.error == null)
+
+    if (res.error == null){
+      if (cachedFns.indexOf(name) !== -1){
+        last_call = {
+          key: key,
+          result: res.result
+        }
+      }
+      else {
+        last_call = {};
+      }
       return res.result;
-    else
+    }
+    else {
+      last_call = {};
       throw res.error;
+    }
   }
 
   function platform(){
@@ -26,7 +52,6 @@ function RemoteFS(url, FS, PATH, ERRNO_CODES){
 
   var fs = {}
   var fns = [
-    'lstatSync',
     'lstatSync',
     'chmodSync',
     'utimesSync',
