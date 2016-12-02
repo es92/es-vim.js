@@ -1,11 +1,18 @@
 {
   "name": "web",
   "version": "1.0.0",
-  "description": "",
   "main": "es_vim_lib.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "author": "",
-  "license": "ISC"
+  "license": "ISC",
+  "dependencies": {
+    "basic-auth": "^1.1.0",
+    "body-parser": "^1.15.2",
+    "express": "^4.14.0",
+    "read": "^1.0.7"
+  },
+  "devDependencies": {},
+  "description": ""
 }

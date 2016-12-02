@@ -6,7 +6,6 @@ essential ux
   - fix remotefs links
   - get a system to properly package things (em_vim, vim_loader -> vim, vimtextarea, etc)
   - vim resizes to slightly smaller than initial size
-  - add security to remotefs server
 
 essential dev
   - get building from current unmodified vim src

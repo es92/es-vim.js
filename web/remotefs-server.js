@@ -4,14 +4,46 @@ var app = express();
 var fs = require('fs');
 var path = require('path');
 var process = require('process');
+var basicAuth = require('basic-auth');
+var crypto = require('crypto');
 
-var port = process.argv[2] || 8080;
+var configFile = process.argv[2];
+if (configFile == null)
+  configFile = process.env.HOME + '/.vim-remotefs.config';
+var config = JSON.parse(fs.readFileSync(configFile, 'utf8'));
+var port = config.port || 8080;
+
 var dir = process.cwd();
 app.use(express.static(dir));
 app.use(bodyParser.json());
 app.listen(port);
 
-app.post('/call', function(req, res){
+
+
+function hash(name, pass){
+  return crypto.createHash("sha256").update(name + "$$" + pass).digest("base64");
+}
+
+var auth = function (req, res, next) {
+  function unauthorized(res) {
+    res.set('WWW-Authenticate', 'Basic realm=Authorization Required');
+    return res.send(401);
+  };
+
+  var user = basicAuth(req);
+
+  if (!user || !user.name || !user.pass) {
+    return unauthorized(res);
+  };
+
+  if (user.name === config.username && hash(user.name, user.pass) === config.passhash) {
+    return next();
+  } else {
+    return unauthorized(res);
+  };
+};
+
+app.post('/call', auth, function(req, res){
   var type = req.body.type;
   var name = req.body.name;
   var args = JSON.parse(req.body.args);
