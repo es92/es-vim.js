@@ -41,8 +41,6 @@ function load_vim(resolve, reject){
         vimjs.em_vimjs = em_vimjs
         onload(vimjs);
       },
-      preRun: [ function() { 
-      } ],
       postRun: [],
       print: function() { 
         if (console.group !== undefined) {

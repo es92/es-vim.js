@@ -1,6 +1,5 @@
 
 essential ux
-  - filesystem mirroring (browserFS)
   - make it easy to set the default vimrc
   - clipboard ui support
   - merge vim_loader.js into vim.js
@@ -11,6 +10,7 @@ essential dev
   - fix load order (register callbacks before init)
 
 extra
+  - get BrowserFS working (fails right now on saving existing files)
   - match full textarea api
   - make load location of vim.js.mem and vim.js.binary configurable
   - mouse support

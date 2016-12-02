@@ -109,16 +109,11 @@ var LibraryVIM = {
       return 'rgb('+bgr[2]+','+bgr[1]+','+bgr[0]+')';
     },
 
-    // dirty works, called before the program starts
     //pre_run: function () {
-    //  // setup directories & environment
-    //  ENV['USER'] = 'root';
-    //  ENV['HOME'] = '/root'; 
-    //  ENV['PWD'] = '/root';
+    //  ENV['USER'] = 'web_user';
+    //  ENV['HOME'] = '/home/web_user'; 
+    //  ENV['PWD'] = '/home/web_user';
     //  ENV['_'] = '/bin/vim';
-
-    //  Module["FS_createPath"]("/", "root", true, true);
-    //  FS.currentPath = '/root';
     //},
     
     // load file from different locations VIMJS_FOLD_START
@@ -147,6 +142,9 @@ var LibraryVIM = {
     vimjs.input_available = Module['cwrap']('input_available', 'number', []);
     vimjs.gui_resize_shell = Module['cwrap']('gui_resize_shell', null, [ 'number', 'number' ]);
 
+    vimjs.Module = Module;
+    vimjs.PATH = PATH;
+    vimjs.ERRNO_CODES = ERRNO_CODES;
     Module['set_vimjs'](vimjs);
 
     _vimjs_init_font('');
