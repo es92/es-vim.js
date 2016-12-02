@@ -32,10 +32,13 @@
       load_vim(function(vim, start){
         vim.FS_createDataFile('/home/web_user', 'test', true, true, true);
         vim.FS.writeFile('/home/web_user/test', 'pre-load FS test');
-        start('/home/web_user/test', function(){
-          var canvas = document.getElementsByTagName('canvas')[0];
-          var vc = new VimCanvas(vim, canvas);
-          window.vc = vc;
+        start({
+          initialFile: '/home/web_user/test', 
+          onload: function(){
+            var canvas = document.getElementsByTagName('canvas')[0];
+            var vc = new VimCanvas(vim, canvas);
+            window.vc = vc;
+          }
         });
       });
     </script>

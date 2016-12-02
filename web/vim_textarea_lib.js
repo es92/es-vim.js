@@ -24,8 +24,11 @@ function init_vim_textarea(vimTextArea){
   load_vim(function(vim, start){
     vim.FS_createDataFile('/home/web_user', 'text', true, true, true);
     vim.FS.writeFile('/home/web_user/text', '');
-    start('/home/web_user/text', function(){
-      vc = new VimCanvas(vim, canvas);
+    start({
+      initialFile: '/home/web_user/text', 
+      onload: function(){
+        vc = new VimCanvas(vim, canvas);
+      }
     });
   });
 
