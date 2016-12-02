@@ -1,5 +1,6 @@
 
 essential ux
+  - figure out why remotefs creates strange files
   - make it easy to set the default vimrc
   - clipboard ui support
   - merge vim_loader.js into vim.js
@@ -10,6 +11,7 @@ essential dev
   - fix load order (register callbacks before init)
 
 extra
+  - figure out what's wrong with remotefs swap files and make them optional
   - get BrowserFS working (fails right now on saving existing files)
   - match full textarea api
   - make load location of vim.js.mem and vim.js.binary configurable

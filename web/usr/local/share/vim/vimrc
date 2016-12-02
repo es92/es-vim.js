@@ -49,6 +49,7 @@ syntax on
 
 "========== OTHERS ==========
 " Some are actually not yet supported
+set noswapfile
 set ruler
 set number
 set wildmenu
