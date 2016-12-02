@@ -29,22 +29,31 @@
       <canvas width=800 height=400 tabindex='1'></canvas>
     </div>
 
-    <script src="vim.js"></script>
+    <script src="vim-async-fs.js"></script>
     <script src="vim_canvas_ui.js"></script>
     <script src="vim_loader.js"></script>
     <script src="tests.js"></script>
     <script>
+
+      function RemoteFS(){
+        return {
+
+        }
+      }
+
+
       load_vim(function(vim, start){
-        vim['FS'];
-        vim.FS_createDataFile('/home/web_user', 'test', true, true, true);
-        vim.FS.writeFile('/home/web_user/test', 'pre-load FS test');
         start('/home/web_user/test', function(){
-          console.log('STARTED');
+          //setTimeout(function(){
+          //  var remoteFS = RemoteFS();
+          //  vim.FS.attach_remote(remoteFS)
+          //}, 1000);
           var canvas = document.getElementsByTagName('canvas')[0];
           var vc = new VimCanvas(vim, canvas);
           window.vc = vc;
         });
-      });
+      }, null, true);
     </script>
   </body>
 </html>
+

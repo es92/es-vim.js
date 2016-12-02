@@ -1,10 +1,13 @@
 
 
 
-function load_vim(resolve, reject){
+function load_vim(resolve, reject, isAsync){
   new Promise(function getEmterpreterBinaryData(resolve, reject){
     var xhr = new XMLHttpRequest();
-    xhr.open('GET', 'vim.js.binary', true);
+    if (isAsync)
+      xhr.open('GET', 'vim-async-fs.js.binary', true);
+    else
+      xhr.open('GET', 'vim.js.binary', true);
     xhr.responseType = 'arraybuffer';
     xhr.onload = function() {
       resolve(xhr.response);

@@ -1,6 +1,6 @@
 
 essential ux
-  - filesystem mirroring (browserFS)
+  - remote async filesystem mirroring
   - make it easy to set the default vimrc
   - clipboard ui support
   - merge vim_loader.js into vim.js

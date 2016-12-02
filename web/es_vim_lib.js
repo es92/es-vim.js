@@ -148,6 +148,8 @@ var LibraryVIM = {
     vimjs.gui_resize_shell = Module['cwrap']('gui_resize_shell', null, [ 'number', 'number' ]);
 
     Module['set_vimjs'](vimjs);
+    window.Module = Module;
+    window.Browser = Browser;
 
     _vimjs_init_font('');
 
@@ -516,3 +518,4 @@ var LibraryVIM = {
 };
 autoAddDeps(LibraryVIM, '$vimjs');
 mergeInto(LibraryManager.library, LibraryVIM);
+
