@@ -32,18 +32,20 @@
     <script>
 
       load_vim(function(vim, start){
+        start({
+          initialFile: '/home/web_user/test',
+          vimrc: null, 
+          onload: function(){
 
-        //vim.FS_createDataFile('/home/web_user', 'test', true, true, true);
-        //vim.FS.writeFile('/home/web_user/test', 'pre-load FS test');
-        start('/home/web_user/test', function(){
+            vim.FS.createPath('/home/web_user', 'data', true, true);
+            vim.FS.mount(RemoteFS('/call', vim.FS, vim.em_vimjs.PATH, vim.em_vimjs.ERRNO_CODES), 
+                         {root: '/'}, 
+                         '/home/web_user/data');
 
-          vim.FS.createPath('/home/web_user', 'data', true, true);
-          vim.FS.mount(RemoteFS('/call', vim.FS, vim.em_vimjs.PATH, vim.em_vimjs.ERRNO_CODES), {root: '/'}, '/home/web_user/data');
-
-          var canvas = document.getElementsByTagName('canvas')[0];
-          var vc = new VimCanvas(vim, canvas);
-          window.vc = vc;
-
+            var canvas = document.getElementsByTagName('canvas')[0];
+            var vc = new VimCanvas(vim, canvas);
+            window.vc = vc;
+          }
         });
       });
     </script>

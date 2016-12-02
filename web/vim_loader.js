@@ -21,10 +21,15 @@ function load_vim(resolve, reject){
     var runtime_ready = false;
     var called_main = false;
     var file = null;
+    var vimrc = null;
 
     function maybeCallMain(){
       if (!called_main && fs_ready && runtime_ready){
         called_main = true;
+        if (vimrc != null){
+          vimjs.FS_createDataFile('/home/web_user', '.vimrc', true, true, true);
+          vimjs.FS.writeFile('/home/web_user/.vimrc', vimrc);
+        }
         if (file != null)
           vimjs.callMain([file]);
         else
@@ -67,9 +72,10 @@ function load_vim(resolve, reject){
       maybeCallMain();
     }
 
-    resolve(vimjs, function load(_file, _onload){
-      onload = _onload;
-      file = _file;
+    resolve(vimjs, function load(config){
+      onload = config.onload;
+      file = config.initialFile;
+      vimrc = config.vimrc;
       fs_ready = true;
       maybeCallMain();
     });

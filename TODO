@@ -1,9 +1,11 @@
 
 essential ux
-  - make it easy to set the default vimrc
+  - reuse duplicate lstats
   - clipboard ui support
   - merge vim_loader.js into vim.js
   - add more colorschemes, syntaxes
+  - move vim to webworker so remotefs doesn't hang browser
+  - fix remotefs links
 
 essential dev
   - get building from current unmodified vim src
