@@ -6,6 +6,7 @@ var path = require('path');
 var process = require('process');
 var basicAuth = require('basic-auth');
 var crypto = require('crypto');
+var https = require('https');
 
 var configFile = process.argv[2];
 if (configFile == null)
@@ -13,12 +14,17 @@ if (configFile == null)
 var config = JSON.parse(fs.readFileSync(configFile, 'utf8'));
 var port = config.port || 8080;
 
-var dir = process.cwd();
-app.use(express.static(dir));
+var httpsKeyPath = config.https_key;
+var httpsCertPath = config.https_crt;
+
+app.use(express.static(path.join(process.cwd(), '../')));
 app.use(bodyParser.json());
-app.listen(port);
 
+var key = fs.readFileSync(httpsKeyPath, 'utf8');
+var cert = fs.readFileSync(httpsCertPath, 'utf8');
 
+var server = https.createServer({key: key, cert: cert}, app);
+server.listen(port);
 
 function hash(name, pass){
   return crypto.createHash("sha256").update(name + "$$" + pass).digest("base64");
@@ -103,6 +109,4 @@ app.post('/call', auth, function(req, res){
   res.end();
 });
 
-
-
-console.log('@' + port + ': ' + dir);
+console.log('@' + port);

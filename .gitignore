@@ -2,3 +2,4 @@
 native/clean-vim.js
 native/vim.js
 web/vim.bc
+web/remotefs/https

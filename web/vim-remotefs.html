@@ -3,7 +3,7 @@
     <meta charset="utf-8">
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
     <title>Vim.js</title>
-    <link rel="stylesheet" href='http://fonts.googleapis.com/css?family=Source+Code+Pro'>
+    <link rel="stylesheet" href='https://fonts.googleapis.com/css?family=Source+Code+Pro'>
     <style>
       canvas {
         border: 1px solid black;
@@ -27,7 +27,7 @@
     <script src="em_vim.js"></script>
     <script src="vim_canvas_ui.js"></script>
     <script src="vim_loader.js"></script>
-    <script src="remotefs.js"></script>
+    <script src="remotefs/remotefs.js"></script>
     <script src="tests.js"></script>
     <script>
 
@@ -46,7 +46,7 @@
             var vc = new VimCanvas(vim, canvas);
             window.vc = vc;
 
-            vim_input_string(vc, ':e ~/data/home/evan/tmp/vimtest/test\n :w\n');
+            //vim_input_string(vc, ':e ~/data/home/evan/tmp/vimtest/test\n :w\n');
           }
         });
       });
