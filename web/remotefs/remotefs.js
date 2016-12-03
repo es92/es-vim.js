@@ -1,7 +1,9 @@
 
 function RemoteFS(url, FS, PATH, ERRNO_CODES){
 
-  var last_call = {}
+  var cached_calls = {}
+  var CACHE_INVALID_S = 3;
+  var CACHE_INVALID_ON_ERROR = false;
 
   var cachedFns = [
     'lstatSync',
@@ -9,13 +11,31 @@ function RemoteFS(url, FS, PATH, ERRNO_CODES){
     'readlinkSync',
   ]
 
-  function net_call(type, name, args){
-    if (cachedFns.indexOf(name) !== -1){
-      var key = JSON.stringify([ type, name, args ]);
-      if (last_call.key === key){
-        return last_call.result;
+  var N = 0
+
+  function cacheable(type, name){
+    return cachedFns.indexOf(name) !== -1 || type === 'resolve_link_path';
+  }
+
+  function check_cache(key, type, name, args){
+    if (key in cached_calls){
+      if (Date.now() - cached_calls[key].time > 1000*CACHE_INVALID_S){
+        delete cached_calls[key];
+      } else {
+        return cached_calls[key].result;
       }
     }
+  }
+
+  function net_call(type, name, args){
+    if (cacheable(type, name)){
+      var key = JSON.stringify([ type, name, Array.prototype.slice.call(args) ]);
+      var result = check_cache(key, type, name, Array.prototype.slice.call(args));
+      if (result != null)
+        return result;
+    }
+    //console.log(N, type, name, args);
+    N++;
 
     var req = new XMLHttpRequest();
     req.open("POST", url,  false);
@@ -25,20 +45,44 @@ function RemoteFS(url, FS, PATH, ERRNO_CODES){
     var res = JSON.parse(req.responseText);
 
     if (res.error == null){
-      if (cachedFns.indexOf(name) !== -1){
-        last_call = {
-          key: key,
-          result: res.result
-        }
+      if (cacheable(type, name)){
+        cached_calls[key] = {
+          time: Date.now(),
+          result: res.result,
+        };
       }
       else {
-        last_call = {};
+        cached_calls = {};
       }
       return res.result;
     }
     else {
-      last_call = {};
+      if (CACHE_INVALID_ON_ERROR)
+        cached_calls = {};
       throw res.error;
+    }
+  }
+
+  function preemptive_readdirSync(){
+    var key = JSON.stringify([ 'fs', 'readdirSync', Array.prototype.slice.call(arguments) ]);
+    var results = check_cache(key);
+    if (results == null){
+      var results = net_call('fs', 'readdirSync', arguments);
+      results.stats.forEach(function(stat){
+        if (stat.error == null){
+          var key = JSON.stringify([ 'fs', 
+                                     'lstatSync', 
+                                     Array.prototype.slice.call([ stat.result.fpath ]) ]);
+          cached_calls[key] = {
+            time: Date.now(),
+            result: stat.result.result,
+          };
+        }
+      });
+      return results.dir_result.slice();
+    }
+    else {
+      return results.dir_result.slice()
     }
   }
 
@@ -76,6 +120,8 @@ function RemoteFS(url, FS, PATH, ERRNO_CODES){
       return net_call('fs', name, arguments);
     }
   });
+
+  fs.readdirSync = preemptive_readdirSync;
 
   var NODEFS = {
     isWindows: false,

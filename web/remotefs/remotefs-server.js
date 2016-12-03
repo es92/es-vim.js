@@ -84,6 +84,27 @@ app.post('/call', auth, function(req, res){
           nbuffer: bufout,
         }
       }
+      else if (name === 'readdirSync'){
+        var root = args[0];
+        var dir_result = fs[name].apply(fs, args);
+        var stats = dir_result.map(function(fpath){
+          var stat = {}
+          var fpath = path.resolve(root, fpath)
+          try {
+            var stat_result = fs.lstatSync(fpath);
+            stat.result = {}
+            stat.result.result = stat_result;
+            stat.result.fpath = fpath;
+          } catch(e) {
+            stat.error = e;
+          }
+          return stat;
+        });
+        var result = {
+          dir_result: dir_result,
+          stats: stats
+        }
+      }
       else {
         var result = fs[name].apply(fs, args);
       }
@@ -101,7 +122,7 @@ app.post('/call', auth, function(req, res){
     var error = e;
   }
 
-  if (name !== 'readSync')
+  if (name !== 'readSync' && name !== 'readdirSync')
     console.log(result);
 
   res.type('text/plain');
