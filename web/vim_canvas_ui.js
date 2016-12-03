@@ -34,17 +34,53 @@ function VimCanvas(vim, canvas, config){
 
   var page = canvas.getContext('2d');
 
+  canvas.width = 800;
+  canvas.height = 400;
+
   // ===============================================================
   //  API
   // ===============================================================
 
   function resize(w, h){
-    var state = page.getImageData(0, 0, canvas.width, canvas.height);
-    canvas.width = w;
-    canvas.height = h;
-    page.putImageData(state, 0, 0);
+    _resize(w, h);
     vim.em_vimjs.gui_resize_shell(w, h);
   }
+  
+  function _vim_resize(w, h){
+    if (w > canvas.width || h > canvas.height){
+      _resize(w, h);
+    }
+    else if (canvas.width - w > s.char_width || canvas.height - h > s.char_height){
+      _resize(w, h);
+    }
+  }
+
+  function sample_avg_color(img_data){
+    var N = 50;
+    var rgbSum = [0, 0, 0]
+    for (var i = 0; i < N; i++){
+      var idx = Math.floor(Math.random()*img_data.data.length/4)
+      var rgb = img_data.data.slice(idx*4, idx*4+3);
+      rgbSum[0] += rgb[0];
+      rgbSum[1] += rgb[1];
+      rgbSum[2] += rgb[2];
+    }
+    var r = rgbSum[0] / N;
+    var g = rgbSum[1] / N;
+    var b = rgbSum[2] / N;
+    return "rgb(" + r + "," + g + "," + b + ")";
+  }
+
+  function _resize(w, h){
+    var img_data = page.getImageData(0, 0, canvas.width, canvas.height);
+    canvas.width = w;
+    canvas.height = h;
+    page.fillStyle = sample_avg_color(img_data);
+    page.fillRect(0, 0, canvas.width, canvas.height);
+    page.putImageData(img_data, 0, 0);
+  }
+
+  setTimeout(resize_to_size, 500);
 
   // ===============================================================
   //  config related
@@ -132,8 +168,7 @@ function VimCanvas(vim, canvas, config){
   });
 
   vim.em_vimjs.on('resize', function(w, h){
-    canvas.width = w;
-    canvas.height = h;
+    _vim_resize(w, h);
   });
 
   // ===============================================================
