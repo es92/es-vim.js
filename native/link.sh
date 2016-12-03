@@ -19,7 +19,7 @@ emcc vim.bc \
     -s EXPORTED_FUNCTIONS="['_main', '_input_available', '_gui_web_handle_key', '_gui_resize_shell']" \
     -s ASYNCIFY_FUNCTIONS="['emscripten_sleep', 'vimjs_flash', 'vimjs_browse']" \
     -s 'EMTERPRETIFY_FILE="vim.js.binary"' \
-    -s EXPORT_NAME='"VimJS"' \
+    -s EXPORT_NAME='"EM_VimJS"' \
     -s MODULARIZE=1 \
     -s EXTRA_EXPORTED_RUNTIME_METHODS='["FS"]' \
     --memory-init-file 1 \

@@ -139,20 +139,27 @@ function VimCanvas(vim, canvas, config){
   //  vim.js api implementation
   // ===============================================================
 
-  vim.em_vimjs.on('get_window_width', function(){
-    return canvas.width;
+  vim.em_vimjs.set_props({
+    window_width: canvas.width,
+    window_height: canvas.height,
+    char_width: s.char_width,
+    char_height: s.char_height
   });
 
-  vim.em_vimjs.on('get_window_height', function(){
-    return canvas.height;
+  vim.em_vimjs.on('get_window_width', function(cb){
+    cb(canvas.width);
   });
 
-  vim.em_vimjs.on('get_char_width', function(){
-    return s.char_width;
+  vim.em_vimjs.on('get_window_height', function(cb){
+    cb(canvas.height);
   });
 
-  vim.em_vimjs.on('get_char_height', function(){
-    return s.char_height + 1;
+  vim.em_vimjs.on('get_char_width', function(cb){
+    cb(s.char_width);
+  });
+
+  vim.em_vimjs.on('get_char_height', function(cb){
+    cb(s.char_height + 1);
   });
 
   vim.em_vimjs.on('set_bg_color', function(color){

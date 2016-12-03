@@ -24,26 +24,26 @@
       <canvas width=800 height=400 tabindex='1'></canvas>
     </div>
 
+    <script src="vim_ww_loader.js"></script>
+    <script src="vim_loader.js"></script>
     <script src="em_vim.js"></script>
     <script src="vim_canvas_ui.js"></script>
-    <script src="vim_loader.js"></script>
     <script src="remotefs/remotefs.js"></script>
     <script src="tests.js"></script>
     <script>
 
-      load_vim(function(vim, start){
+      var vimjs = new VimJS_WW();
+
+      vimjs.load(function(start){
+        vimjs.FS.createDataFile('/home/web_user', 'test', true, true, true);
+        vimjs.FS.writeFile('/home/web_user/test', 'pre-load FS test');
         start({
-          initialFile: '/home/web_user/test',
-          vimrc: null, 
-          onload: function(){
-
-            vim.FS.createPath('/home/web_user', 'data', true, true);
-            vim.FS.mount(RemoteFS('/call', vim.FS, vim.em_vimjs.PATH, vim.em_vimjs.ERRNO_CODES), 
-                         {root: '/'}, 
-                         '/home/web_user/data');
-
+          initialPath: '/home/web_user/test', 
+          onstarted: function(){
             var canvas = document.getElementsByTagName('canvas')[0];
-            var vc = new VimCanvas(vim, canvas);
+            var vc = new VimCanvas(vimjs, canvas);
+
+            vimjs.load_remotefs('/call');
             window.vc = vc;
           }
         });

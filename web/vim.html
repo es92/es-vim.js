@@ -24,19 +24,23 @@
       <canvas width=800 height=400 tabindex='1'></canvas>
     </div>
 
+    <script src="vim_ww_loader.js"></script>
+    <script src="vim_loader.js"></script>
     <script src="em_vim.js"></script>
     <script src="vim_canvas_ui.js"></script>
-    <script src="vim_loader.js"></script>
     <script src="tests.js"></script>
     <script>
-      load_vim(function(vim, start){
-        vim.FS_createDataFile('/home/web_user', 'test', true, true, true);
-        vim.FS.writeFile('/home/web_user/test', 'pre-load FS test');
+
+      var vimjs = new VimJS_WW();
+
+      vimjs.load(function(start){
+        vimjs.FS.createDataFile('/home/web_user', 'test', true, true, true);
+        vimjs.FS.writeFile('/home/web_user/test', 'pre-load FS test');
         start({
-          initialFile: '/home/web_user/test', 
-          onload: function(){
+          initialPath: '/home/web_user/test', 
+          onstarted: function(){
             var canvas = document.getElementsByTagName('canvas')[0];
-            var vc = new VimCanvas(vim, canvas);
+            var vc = new VimCanvas(vimjs, canvas);
             window.vc = vc;
           }
         });

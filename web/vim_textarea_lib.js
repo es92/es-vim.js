@@ -21,15 +21,16 @@ function init_vim_textarea(vimTextArea){
     },
   });
 
-  load_vim(function(vim, start){
-    vim.FS_createDataFile('/home/web_user', 'text', true, true, true);
-    vim.FS.writeFile('/home/web_user/text', '');
+  var vimjs = new VimJS();
+
+  vimjs.load(function(start){
+    vimjs.FS.createDataFile('/home/web_user', 'text', true, true, true);
+    vimjs.FS.writeFile('/home/web_user/text', '');
     start({
-      initialFile: '/home/web_user/text', 
-      onload: function(){
-        vc = new VimCanvas(vim, canvas);
+      initialPath: '/home/web_user/text', 
+      onstarted: function(){
+        vc = new VimCanvas(vimjs, canvas);
       }
     });
   });
-
 }

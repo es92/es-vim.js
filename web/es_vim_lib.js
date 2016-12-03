@@ -35,10 +35,20 @@ var LibraryVIM = {
     gui_web_handle_key: null,
     input_available: null,
 
+    window_width: null,
+    window_height: null,
+    char_width: null,
+    char_height: null,
+
     special_keys: [],
     special_keys_namemap: {},
     keys_to_intercept_upon_keydown: {},
     color_map: {},
+
+    set_props: function(config){
+      for (var name in config)
+        vimjs[name] = config[name];
+    },
 
     dbg: true,
     _callbacks: {},
@@ -145,9 +155,6 @@ var LibraryVIM = {
     vimjs.Module = Module;
     vimjs.PATH = PATH;
     vimjs.ERRNO_CODES = ERRNO_CODES;
-    Module['set_vimjs'](vimjs);
-
-    _vimjs_init_font('');
 
     vimjs.special_keys = [];
     vimjs.special_keys_namemap = {};
@@ -334,6 +341,10 @@ var LibraryVIM = {
       keys_to_intercept_upon_keydown[k] = 1;
     });
     vimjs.keys_to_intercept_upon_keydown = keys_to_intercept_upon_keydown;
+
+    Module['set_vimjs'](vimjs);
+
+    _vimjs_init_font('');
   },
   
   vimjs_prepare_exit: function() {
@@ -362,11 +373,59 @@ var LibraryVIM = {
   },
 
   vimjs_get_window_width: function() {
-    return vimjs.emit_apply('get_window_width', arguments);
+    if (vimjs.window_width != null){
+      return vimjs.window_width;
+    }
+    else {
+      return EmterpreterAsync.handle(function(resume) {
+        vimjs.emit('get_window_width', function(window_width){
+          resume(function() { return window_width; });
+        });
+      });
+    }
   },
 
   vimjs_get_window_height: function() {
-    return vimjs.emit_apply('get_window_height', arguments)
+    if (vimjs.window_height != null){
+      return vimjs.window_height;
+    }
+    else {
+      return EmterpreterAsync.handle(function(resume) {
+        vimjs.emit('get_window_height', function(window_height){
+          resume(function() { return window_height; });
+        });
+      });
+    }
+  },
+
+  vimjs_check_font: function(font) {
+    font = Pointer_stringify(font);
+    return vimjs.emit('check_font', font);
+  },
+
+  vimjs_get_char_width: function() {
+    if (vimjs.char_width != null){
+      return vimjs.char_width;
+    }
+    else {
+      return EmterpreterAsync.handle(function(resume) {
+        vimjs.emit('get_char_width', function(char_width){
+          resume(function() { return char_width; });
+        });
+      });
+    }
+  },
+  vimjs_get_char_height: function() {
+    if (vimjs.char_height != null){
+      return vimjs.char_height;
+    }
+    else {
+      return EmterpreterAsync.handle(function(resume) {
+        vimjs.emit('get_char_height', function(char_height){
+          resume(function() { return char_height; });
+        });
+      });
+    }
   },
 
   vimjs_resize: function(width, height) {
@@ -425,19 +484,6 @@ var LibraryVIM = {
 
   vimjs_set_font: function(font) {
     vimjs.emit('set_font', Pointer_stringify(font));
-  },
-
-  vimjs_check_font: function(font) {
-    font = Pointer_stringify(font);
-    return vimjs.emit('check_font', font);
-  },
-
-  vimjs_get_char_width: function() {
-    return vimjs.emit_apply('get_char_width', arguments)
-  },
-  vimjs_get_char_height: function() {
-    return vimjs.emit_apply('get_char_height', arguments)
-    return vimjs.char_height;
   },
 
   vimjs_is_valid_color: function(colorp) {

@@ -1,5 +1,34 @@
 
 
+var VimJS = function(){
+  this.em_vimjs = {};
+  var passthrough = [ 'gui_resize_shell', 'handle_key', 'on', 'off', 'set_props' ];
+  passthrough.forEach(function(name){
+    this.em_vimjs[name] = function(){
+      this.vim.em_vimjs[name].apply(this.vim.em_vimjs, arguments);
+    }.bind(this)
+  }.bind(this));
+  Object.defineProperty(this.em_vimjs, 'keys_to_intercept_upon_keydown', {
+    get: function(){
+      return this.vim.em_vimjs.keys_to_intercept_upon_keydown;
+    }.bind(this)
+  });
+}
+
+VimJS.prototype.load = function(onloaded){
+  load_vim(function(vim, start){ 
+    this.vim = vim;
+    this.FS = this.vim.FS;
+    onloaded(start);
+  }.bind(this));
+}
+
+VimJS.prototype.load_remotefs = function(url){
+  this.vim.FS.createPath('/home/web_user', 'data', true, true);
+  this.vim.FS.mount(RemoteFS(url, this.vim.FS, this.vim.em_vimjs.PATH, this.vim.em_vimjs.ERRNO_CODES), 
+               {root: '/'}, 
+               '/home/web_user/data');
+}
 
 function load_vim(resolve, reject){
   new Promise(function getEmterpreterBinaryData(resolve, reject){
@@ -15,7 +44,7 @@ function load_vim(resolve, reject){
     xhr.send(null);
   }).then(function(emterpreterBinaryData){
 
-    var onload = null;
+    var onstarted = null;
 
     var fs_ready = false;
     var runtime_ready = false;
@@ -37,14 +66,14 @@ function load_vim(resolve, reject){
       }
     }
 
-    var vimjs = VimJS({
+    var vimjs = EM_VimJS({
       emterpreterFile: emterpreterBinaryData,
       noInitialRun: true,
       noExitRuntime: true,
       arguments: ['/usr/local/share/vim/example.js'],
       set_vimjs: function(em_vimjs){
         vimjs.em_vimjs = em_vimjs
-        onload(vimjs);
+        onstarted(vimjs);
       },
       postRun: [],
       print: function() { 
@@ -73,7 +102,7 @@ function load_vim(resolve, reject){
     }
 
     resolve(vimjs, function load(config){
-      onload = config.onload;
+      onstarted = config.onstarted;
       file = config.initialFile;
       vimrc = config.vimrc;
       fs_ready = true;
