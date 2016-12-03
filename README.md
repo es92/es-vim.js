@@ -5,7 +5,7 @@
 ## Using the Library
 
 The library is split in two components
-- [web/em_vim.js](web/em_vim.js) and [web/vim_loader.js](web/vim_loader.js) for the backend
+- [web/em_vim.js](web/em_vim.js) and either [web/vim_loader.js](web/vim_loader.js) or [web/vim_ww_loader.js](web/vim_ww_loader.js) for the backend
 - [web/vim_canvas_ui.js](web/vim_canvas_ui.js) for the frontend
 
 See [web/vim.html](web/vim.html) for an example
