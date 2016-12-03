@@ -1,7 +1,6 @@
 
 ux
   - react component
-  - fix remotefs links
   - get a system to properly package things (em_vim, vim_loader -> vim, vimtextarea, etc)
   - add environment configuring (especially home)
   - remotefs preemptive lstat (folder case)

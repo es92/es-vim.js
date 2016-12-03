@@ -92,9 +92,9 @@ app.post('/call', auth, function(req, res){
       var result = process.platform;
     }
     else if (type === 'resolve_link_path'){
-      var root = args[0];
-      var mpath = args[1];
-      var result = path.relative(path.resolve(root), mpath);
+      var lpath = args[0];
+      var fpath = args[1];
+      var result = path.relative(path.dirname(path.resolve(lpath)), fpath);
     }
   } catch(e){
     console.log(e);

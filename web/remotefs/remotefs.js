@@ -278,11 +278,10 @@ function RemoteFS(url, FS, PATH, ERRNO_CODES){
         }
       },
       readlink: function(node) {
-        var path = NODEFS.realPath(node);
+        var linkPath = NODEFS.realPath(node);
         try {
-          return path;
-          //path = fs.readlinkSync(path);
-          //path = resolve_link_path(node.mount.opts.root, path);
+          var filePath = fs.readlinkSync(linkPath);
+          var path = resolve_link_path(linkPath, filePath);
           return path;
         } catch (e) {
           if (!e.code) throw e;
