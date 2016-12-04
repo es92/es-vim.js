@@ -11,7 +11,8 @@ cp ../link.sh ./link.sh
 
 cd ../..
 
-sed -i -- 's/Module\["FS"]=FS;/Module\["FS"]=FS;Module\["vimjs"]=vimjs;/g' native/vim.js/web/vim.js
+sed -i -- 's/Module\["FS"]=FS;/Module\["FS"]=FS;Module\["vimjs"]=vimjs;Module\["ERRNO_CODES"]=ERRNO_CODES;Module\["PATH"]=PATH;Module\["ENV"]=ENV;/g' native/vim.js/web/vim.js
+
 
 cp native/vim.js/web/vim.js web/em_vim.js
 cp native/vim.js/web/vim.js.mem web/vim.js.mem

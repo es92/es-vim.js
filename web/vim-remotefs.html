@@ -37,13 +37,14 @@
       vimjs.load(function(start){
         vimjs.FS.createDataFile('/home/web_user', 'test', true, true, true);
         vimjs.FS.writeFile('/home/web_user/test', 'pre-load FS test');
+        vimjs.load_remotefs('/call');
         var canvas = document.getElementsByTagName('canvas')[0];
         var vc = new VimCanvas(vimjs, canvas);
         window.vc = vc;
         start({
-          initialPath: '/home/web_user/test', 
-          oninit: function(finishInit){ 
-            vimjs.load_remotefs('/call');
+          initialFile: '/home/web_user/test', 
+          initialPath: '/home/web_user/',
+          oninit: function(finishInit){
             finishInit()
           }
         });

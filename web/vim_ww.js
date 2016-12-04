@@ -15,7 +15,9 @@ ww_bridge.on('load', function(loaded){
     vimjs = _vimjs;
     loaded(function(config, oninit){
       start({
+        initialFile: config.initialFile,
         initialPath: config.initialPath,
+        home: config.home,
         vimrc: config.vimrc,
         oninit: function(finish_init){
           oninit(finish_init);
@@ -49,7 +51,7 @@ ww_bridge.on('load_remotefs', function(url){
   importScripts('remotefs/remotefs.js');
 
   vimjs.FS.createPath('/home/web_user', 'data', true, true);
-  vimjs.FS.mount(RemoteFS(url, vimjs.FS, vimjs.em_vimjs.PATH, vimjs.em_vimjs.ERRNO_CODES), 
+  vimjs.FS.mount(RemoteFS(url, vimjs.FS, vimjs.PATH, vimjs.ERRNO_CODES), 
                {root: '/'}, 
                '/home/web_user/data');
 });

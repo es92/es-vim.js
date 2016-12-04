@@ -31,7 +31,7 @@
     <script src="tests.js"></script>
     <script>
 
-      var vimjs = new VimJS_WW();
+      var vimjs = new VimJS();
 
       vimjs.load(function(start){
         vimjs.FS.createDataFile('/home/web_user', 'test', true, true, true);
@@ -40,7 +40,8 @@
         var vc = new VimCanvas(vimjs, canvas);
         window.vc = vc;
         start({
-          initialPath: '/home/web_user/test', 
+          initialFile: '/home/web_user/test', 
+          initialPath: '/home/web_user/',
           oninit: function(finishInit){ 
             finishInit()
           }

@@ -2,7 +2,6 @@
 ux
   - react component
   - get a system to properly package things (em_vim, vim_loader -> vim, vimtextarea, etc)
-  - add environment configuring (especially home)
   - add cd api
 
   - clipboard ui support

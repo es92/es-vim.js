@@ -29,7 +29,7 @@ function init_vim_textarea(vimTextArea){
     var canvas = document.getElementsByTagName('canvas')[0];
     rc = new VimCanvas(vimjs, canvas);
     start({
-      initialPath: '/home/web_user/text', 
+      initialFile: '/home/web_user/text', 
       oninit: function(finishInit){ 
         finishInit()
       }
