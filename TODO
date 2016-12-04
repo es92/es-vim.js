@@ -7,15 +7,13 @@ ux
 
   - clipboard ui support
   - add more colorschemes, syntaxes
+  - match full textarea api
+  - mouse support
+  - get BrowserFS working (fails right now on saving existing files)
 
 dev
   - make load location of vim.js.mem and vim.js.binary configurable
-  - fix load order (register callbacks before init)
   - get .vim files from a vim distribution (remove from repo)
   - get building from current unmodified vim src
-  - cleanup web worker code
 
-  - match full textarea api
-  - get BrowserFS working (fails right now on saving existing files)
-  - mouse support
 

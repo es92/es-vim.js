@@ -342,9 +342,13 @@ var LibraryVIM = {
     });
     vimjs.keys_to_intercept_upon_keydown = keys_to_intercept_upon_keydown;
 
-    Module['set_vimjs'](vimjs);
-
     _vimjs_init_font('');
+
+    return EmterpreterAsync.handle(function(resume) {
+      vimjs.emit('init_vimjs', function(){
+        resume(function() { return; });
+      });
+    });
   },
   
   vimjs_prepare_exit: function() {

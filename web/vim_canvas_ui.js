@@ -34,12 +34,12 @@ function VimCanvas(vim, canvas, config){
 
   var page = canvas.getContext('2d');
 
-  canvas.width = 800;
-  canvas.height = 400;
-
   // ===============================================================
   //  API
   // ===============================================================
+
+  canvas.width = canvas.clientWidth;
+  canvas.height = canvas.clientHeight;
 
   function resize(w, h){
     _resize(w, h);
@@ -77,10 +77,9 @@ function VimCanvas(vim, canvas, config){
     canvas.height = h;
     page.fillStyle = sample_avg_color(img_data);
     page.fillRect(0, 0, canvas.width, canvas.height);
+
     page.putImageData(img_data, 0, 0);
   }
-
-  setTimeout(resize_to_size, 500);
 
   // ===============================================================
   //  config related

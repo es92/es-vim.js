@@ -26,10 +26,12 @@ function init_vim_textarea(vimTextArea){
   vimjs.load(function(start){
     vimjs.FS.createDataFile('/home/web_user', 'text', true, true, true);
     vimjs.FS.writeFile('/home/web_user/text', '');
+    var canvas = document.getElementsByTagName('canvas')[0];
+    rc = new VimCanvas(vimjs, canvas);
     start({
       initialPath: '/home/web_user/text', 
-      onstarted: function(){
-        vc = new VimCanvas(vimjs, canvas);
+      oninit: function(finishInit){ 
+        finishInit()
       }
     });
   });

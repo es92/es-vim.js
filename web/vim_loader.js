@@ -1,4 +1,5 @@
 
+// ============================================================
 
 var VimJS = function(){
   this.em_vimjs = {};
@@ -30,7 +31,65 @@ VimJS.prototype.load_remotefs = function(url){
                '/home/web_user/data');
 }
 
-function load_vim(resolve, reject){
+// ============================================================
+
+function VimJS_WW(){
+  this.FS = {
+    createDataFile: function(){
+      this.ww_bridge.emit_apply('FS_createDataFile', arguments);
+    }.bind(this),
+    writeFile: function(){
+      this.ww_bridge.emit_apply('FS_writeFile', arguments);
+    }.bind(this),
+  }
+
+  this.em_vimjs = {};
+
+  VimJS_WW.VIMJS_PASSTHROUGH.forEach(function passthrough_em_vimjs_fn(names){
+      var vimjs_name = names[0];
+      var event_name = names[1];
+      this.em_vimjs[vimjs_name] = function(){
+        this.ww_bridge.emit_apply(event_name, arguments);
+      }.bind(this);
+    }.bind(this));
+}
+
+VimJS_WW.VIMJS_PASSTHROUGH = 
+  [ [ 'set_props', 'set_props' ],
+    [ 'on', 'em_vimjs_on' ], 
+    [ 'off', 'em_vimjs_off' ], 
+    [ 'gui_resize_shell', 'gui_resize_shell' ],
+    [ 'handle_key', 'handle_key' ]
+  ]
+
+VimJS_WW.prototype.load = function(loaded){
+  this.vim_w = new Worker("vim_ww.js");
+  this.ww_bridge = WW_Bridge_Browser(this.vim_w);
+
+  this.ww_bridge.emit('load', function(start){
+    loaded(function onfsloaded(config){
+      start({
+        initialPath: config.initialPath,
+        vimrc: config.vimrc,
+      }, function onviminit(finish_init){
+        this.keys_to_intercept_upon_keydown = this.ww_bridge.emit(
+                                                    'get_keys_to_intercept_upon_keydown', 
+                                                    function(keys_to_intercept_upon_keydown){
+          this.em_vimjs.keys_to_intercept_upon_keydown = keys_to_intercept_upon_keydown;
+          config.oninit(finish_init);
+        }.bind(this));
+      }.bind(this));
+    }.bind(this));
+  }.bind(this));
+}
+
+VimJS_WW.prototype.load_remotefs = function(url){
+  this.ww_bridge.emit('load_remotefs', url);
+}
+
+// ============================================================
+
+function load_vim(onfsloaded, reject){
   new Promise(function getEmterpreterBinaryData(resolve, reject){
     var xhr = new XMLHttpRequest();
     xhr.open('GET', 'vim.js.binary', true);
@@ -42,39 +101,13 @@ function load_vim(resolve, reject){
       reject(xhr.statusText);
     };
     xhr.send(null);
+  // ======================================================
   }).then(function(emterpreterBinaryData){
-
-    var onstarted = null;
-
-    var fs_ready = false;
-    var runtime_ready = false;
-    var called_main = false;
-    var file = null;
-    var vimrc = null;
-
-    function maybeCallMain(){
-      if (!called_main && fs_ready && runtime_ready){
-        called_main = true;
-        if (vimrc != null){
-          vimjs.FS_createDataFile('/home/web_user', '.vimrc', true, true, true);
-          vimjs.FS.writeFile('/home/web_user/.vimrc', vimrc);
-        }
-        if (file != null)
-          vimjs.callMain([file]);
-        else
-          vimjs.callMain();
-      }
-    }
-
     var vimjs = EM_VimJS({
       emterpreterFile: emterpreterBinaryData,
       noInitialRun: true,
       noExitRuntime: true,
       arguments: ['/usr/local/share/vim/example.js'],
-      set_vimjs: function(em_vimjs){
-        vimjs.em_vimjs = em_vimjs
-        onstarted(vimjs);
-      },
       postRun: [],
       print: function() { 
         if (console.group !== undefined) {
@@ -93,20 +126,52 @@ function load_vim(resolve, reject){
           // IE
           console.log(arguments);
         }
-      },
+      }
     });
 
-    vimjs.onRuntimeInitialized = function(){
-      runtime_ready = true;
-      maybeCallMain();
+    // ======================================================
+
+    var state = {
+      vimrc: null,
+      initial_path: '',
+      called_main: false,
+
+      loader_ready: false,
+      runtime_ready: false,
+      called_main: false,
+      oninit: null,
     }
 
-    resolve(vimjs, function load(config){
-      onstarted = config.onstarted;
-      file = config.initialFile;
-      vimrc = config.vimrc;
-      fs_ready = true;
-      maybeCallMain();
+    function maybe_call_main(){
+      if (!state.called_main && state.loader_ready && state.runtime_ready){
+        state.called_main = true;
+        if (state.vimrc != null){
+          vimjs.FS_createDataFile('/home/web_user', '.vimrc', true, true, true);
+          vimjs.FS.writeFile('/home/web_user/.vimrc', state.vimrc);
+        }
+        if (state.initial_path != null)
+          vimjs.callMain([state.initial_path]);
+        else
+          vimjs.callMain();
+      }
+    }
+
+    vimjs.onRuntimeInitialized = function(){
+      state.runtime_ready = true;
+      maybe_call_main();
+    }
+
+    vimjs.em_vimjs = vimjs.vimjs;
+    vimjs.em_vimjs.on('init_vimjs', function(finish_init){
+      state.oninit(finish_init);
+    });
+
+    onfsloaded(vimjs, function(config){
+      state.loader_ready = true;
+      state.initial_path = config.initialPath;
+      state.vimrc = config.vimrc;
+      state.oninit = config.oninit;
+      maybe_call_main();
     });
   });
 }
