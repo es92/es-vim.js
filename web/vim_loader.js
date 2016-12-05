@@ -100,13 +100,13 @@ VimJS_WW.prototype.load_remotefs = function(url){
 function load_vim(onfsloaded, reject, data_files){
   if (data_files == null)
     data_files = {};
-  if (data_files.memoryFilePrefix == null)
-    data_files.memoryFilePrefix = '';
-  if (data_files.binaryFilePrefix == null)
-    data_files.binaryFilePrefix = '';
+  if (data_files.memoryFilePath == null)
+    data_files.memoryFilePath = 'vim.js.mem';
+  if (data_files.binaryFilePath == null)
+    data_files.binaryFilePath = 'vim.js.binary';
   new Promise(function getEmterpreterBinaryData(resolve, reject){
     var xhr = new XMLHttpRequest();
-    xhr.open('GET', data_files.binaryFilePrefix + 'vim.js.binary', true);
+    xhr.open('GET', data_files.binaryFilePath, true);
     xhr.responseType = 'arraybuffer';
     xhr.onload = function() {
       resolve(xhr.response);
@@ -119,7 +119,12 @@ function load_vim(onfsloaded, reject, data_files){
   }).then(function(emterpreterBinaryData){
     var vimjs = EM_VimJS({
       emterpreterFile: emterpreterBinaryData,
-      memoryInitializerPrefixURL: data_files.memoryFilePrefix,
+      locateFile: function(f){
+        if (f === 'vim.js.mem')
+          return data_files.memoryFilePath;
+        else
+          return f;
+      },
       noInitialRun: true,
       noExitRuntime: true,
       arguments: ['/usr/local/share/vim/example.js'],
