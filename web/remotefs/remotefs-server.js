@@ -17,6 +17,15 @@ var port = config.port || 8080;
 var httpsKeyPath = config.https_key;
 var httpsCertPath = config.https_crt;
 
+app.all('*', function(req, res, next) {
+  var origin = req.get('origin'); 
+  res.header('Access-Control-Allow-Origin', origin);
+  res.header('Access-Control-Allow-Credentials', 'true');
+  res.header("Access-Control-Allow-Headers", "X-Requested-With");
+  res.header('Access-Control-Allow-Headers', 'Content-Type');
+  next();
+});
+
 app.use(express.static(path.join(process.cwd(), '../')));
 app.use(bodyParser.json());
 

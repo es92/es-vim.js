@@ -38,6 +38,7 @@ function RemoteFS(url, FS, PATH, ERRNO_CODES){
     N++;
 
     var req = new XMLHttpRequest();
+    req.withCredentials = true;
     req.open("POST", url,  false);
     req.setRequestHeader("Content-Type", "application/json;charset=UTF-8");
     var data = { type: type, name: name, args: JSON.stringify(Array.prototype.slice.call(args)) }
