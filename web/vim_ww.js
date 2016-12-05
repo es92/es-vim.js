@@ -11,7 +11,7 @@ var vimjs = null
 
 var ww_bridge = WW_Bridge_Worker();
 
-ww_bridge.on('load', function(loaded){
+ww_bridge.on('load', function(loaded, data_files_config){
   load_vim(function(_vimjs, start){
     vimjs = _vimjs;
     loaded(function(config, oninit){
@@ -25,7 +25,7 @@ ww_bridge.on('load', function(loaded){
         },
       });
     });
-  });
+  }, null, data_files_config);
 });
 
 ww_bridge.on('get_keys_to_intercept_upon_keydown', function(cb){

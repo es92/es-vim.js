@@ -1,6 +1,6 @@
 {
   "name": "es-vim.js",
-  "version": "0.0.1",
+  "version": "0.0.2",
   "main": "vim.html",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1"

@@ -21,13 +21,13 @@ var VimJS = function(){
   });
 }
 
-VimJS.prototype.load = function(onloaded){
+VimJS.prototype.load = function(onloaded, data_files_config){
   load_vim(function(vim, start){ 
     this.vim = vim;
     this.FS = this.vim.FS;
     this.ENV = this.vim.ENV;
     onloaded(start);
-  }.bind(this));
+  }.bind(this), null, data_files_config);
 }
 
 VimJS.prototype.load_remotefs = function(url){
@@ -68,7 +68,7 @@ VimJS_WW.VIMJS_PASSTHROUGH =
     [ 'handle_key', 'handle_key' ]
   ]
 
-VimJS_WW.prototype.load = function(loaded){
+VimJS_WW.prototype.load = function(loaded, data_files_config){
   this.vim_w = new Worker("vim_ww.js");
   this.ww_bridge = WW_Bridge_Browser(this.vim_w);
 
@@ -88,7 +88,7 @@ VimJS_WW.prototype.load = function(loaded){
         }.bind(this));
       }.bind(this));
     }.bind(this));
-  }.bind(this));
+  }.bind(this), data_files_config);
 }
 
 VimJS_WW.prototype.load_remotefs = function(url){
@@ -97,10 +97,16 @@ VimJS_WW.prototype.load_remotefs = function(url){
 
 // ============================================================
 
-function load_vim(onfsloaded, reject){
+function load_vim(onfsloaded, reject, data_files){
+  if (data_files == null)
+    data_files = {};
+  if (data_files.memoryFilePrefix == null)
+    data_files.memoryFilePrefix = '';
+  if (data_files.binaryFilePrefix == null)
+    data_files.binaryFilePrefix = '';
   new Promise(function getEmterpreterBinaryData(resolve, reject){
     var xhr = new XMLHttpRequest();
-    xhr.open('GET', 'vim.js.binary', true);
+    xhr.open('GET', data_files.binaryFilePrefix + 'vim.js.binary', true);
     xhr.responseType = 'arraybuffer';
     xhr.onload = function() {
       resolve(xhr.response);
@@ -113,6 +119,7 @@ function load_vim(onfsloaded, reject){
   }).then(function(emterpreterBinaryData){
     var vimjs = EM_VimJS({
       emterpreterFile: emterpreterBinaryData,
+      memoryInitializerPrefixURL: data_files.memoryFilePrefix,
       noInitialRun: true,
       noExitRuntime: true,
       arguments: ['/usr/local/share/vim/example.js'],

@@ -1,7 +1,5 @@
 
 ux
-  - add cd api
-
   - clipboard ui support
   - add more colorschemes, syntaxes
   - match full textarea api
@@ -9,7 +7,6 @@ ux
   - get BrowserFS working (fails right now on saving existing files)
 
 dev
-  - make load location of vim.js.mem and vim.js.binary configurable
   - get .vim files from a vim distribution (remove from repo)
   - get building from current unmodified vim src
 
