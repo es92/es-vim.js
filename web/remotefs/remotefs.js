@@ -418,3 +418,5 @@ function RemoteFS(url, FS, PATH, ERRNO_CODES){
   NODEFS.staticInit();
   return NODEFS;
 }
+
+module.exports = RemoteFS;

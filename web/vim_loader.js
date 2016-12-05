@@ -1,4 +1,7 @@
 
+var RemoteFS = require('./remotefs/remotefs.js');
+var EM_VimJS = require('./em_vim.js');
+
 // ============================================================
 
 var VimJS = function(){
@@ -198,3 +201,9 @@ function load_vim(onfsloaded, reject){
     });
   });
 }
+
+module.exports = {
+  VimJS: VimJS,
+  VimJS_WW: VimJS_WW,
+  load_vim: load_vim
+};

@@ -1,7 +1,4 @@
 
-
-
-
 function WW_Bridge_Browser(worker){
   var bridge = new WW_Bridge_Helper({
     send: function(data){
@@ -128,4 +125,12 @@ WW_Bridge_Helper.prototype.on = function(name, fn){
 
 WW_Bridge_Helper.prototype.off = function(name, id){
   delete this.callbacks[name][id];
+}
+
+if (typeof module !== 'undefined' && typeof module.exports !== 'undefined') {
+  module.exports = {
+     WW_Bridge_Browser: WW_Bridge_Browser,
+     WW_Bridge_Worker: WW_Bridge_Worker,
+     WW_Bridge_Helper: WW_Bridge_Helper,
+  }
 }

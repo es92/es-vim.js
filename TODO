@@ -1,6 +1,6 @@
 
 ux
-  - get a system to properly package things (em_vim, vim_loader -> vim, vimtextarea, etc)
+  - fix commonjs for development
   - add cd api
 
   - clipboard ui support

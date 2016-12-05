@@ -15,5 +15,7 @@ sed -i -- 's/Module\["FS"]=FS;/Module\["FS"]=FS;Module\["vimjs"]=vimjs;Module\["
 
 
 cp native/vim.js/web/vim.js web/em_vim.js
+echo ";(typeof module !== 'undefined') && (typeof module.exports !== 'undefined') && (module.exports = EM_VimJS);" >> web/em_vim.js
+
 cp native/vim.js/web/vim.js.mem web/vim.js.mem
 cp native/vim.js/web/vim.js.binary web/vim.js.binary

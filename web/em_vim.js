@@ -14,3 +14,4 @@ var lc=[bm,li,ii,oi,ki,jh,Sg,vd,hi,ge,Oj,qd,Dc,nf,Rd,$d];var mc=[$m,qe,tc,$m];va
 
 
 
+;(typeof module !== 'undefined') && (typeof module.exports !== 'undefined') && (module.exports = EM_VimJS);

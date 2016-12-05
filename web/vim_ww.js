@@ -2,9 +2,10 @@
 // FIXME this works for emscripten but is it bad?
 self.window = self;
 
-importScripts('em_vim.js');
+importScripts('commonjs_shim.js');
 importScripts('vim_loader.js');
 importScripts('ww_bridge.js');
+importScripts('em_vim.js');
 
 var vimjs = null
 
