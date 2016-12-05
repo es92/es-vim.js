@@ -37,4 +37,6 @@ function init_vim_textarea(vimTextArea){
   });
 }
 
-module.exports = init_vim_textarea;
+if (typeof module !== 'undefined' && typeof module.exports !== 'undefined') {
+  module.exports = init_vim_textarea;
+}

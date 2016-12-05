@@ -255,4 +255,6 @@ function VimCanvas(vim, canvas, config){
   return s;
 }
 
-module.exports = VimCanvas;
+if (typeof module !== 'undefined' && typeof module.exports !== 'undefined') {
+  module.exports = VimCanvas;
+}

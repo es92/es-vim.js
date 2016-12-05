@@ -1,6 +1,5 @@
 
 ux
-  - fix commonjs for development
   - add cd api
 
   - clipboard ui support

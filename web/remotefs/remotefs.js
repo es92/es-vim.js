@@ -419,4 +419,6 @@ function RemoteFS(url, FS, PATH, ERRNO_CODES){
   return NODEFS;
 }
 
-module.exports = RemoteFS;
+if (typeof module !== 'undefined' && typeof module.exports !== 'undefined') {
+  module.exports = RemoteFS;
+}

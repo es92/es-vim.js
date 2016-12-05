@@ -1,6 +1,8 @@
 
-var RemoteFS = require('./remotefs/remotefs.js');
-var EM_VimJS = require('./em_vim.js');
+if (typeof module !== 'undefined' && typeof module.exports !== 'undefined') {
+  var RemoteFS = require('./remotefs/remotefs.js');
+  var EM_VimJS = require('./em_vim.js');
+}
 
 // ============================================================
 
@@ -202,8 +204,10 @@ function load_vim(onfsloaded, reject){
   });
 }
 
-module.exports = {
-  VimJS: VimJS,
-  VimJS_WW: VimJS_WW,
-  load_vim: load_vim
-};
+if (typeof module !== 'undefined' && typeof module.exports !== 'undefined') {
+  module.exports = {
+    VimJS: VimJS,
+    VimJS_WW: VimJS_WW,
+    load_vim: load_vim
+  };
+}
