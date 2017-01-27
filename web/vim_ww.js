@@ -45,6 +45,11 @@ ww_bridge.on('FS_writeFile', function(){
   vimjs.FS.writeFile.apply(null, arguments)
 });
 
+ww_bridge.on('destroy', function(){
+  vimjs.noExitRuntime = false;
+  vimjs.exit();
+});
+
 VimJS_WW.VIMJS_PASSTHROUGH.forEach(function passthrough_em_vimjs_fn(names){
     var event_name = names[1];
     var vimjs_name = names[0];

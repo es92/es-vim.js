@@ -33,6 +33,11 @@ VimJS.prototype.load = function(onloaded, data_files_config, allow_exit){
   }.bind(this), null, data_files_config, allow_exit);
 }
 
+VimJS.prototype.destroy = function(){
+  this.vim.noExitRuntime = false;
+  this.vim.exit();
+}
+
 VimJS.prototype.load_remotefs = function(url){
   this.vim.FS.createPath('/home/web_user', 'data', true, true);
   this.vim.FS.mount(RemoteFS(url, this.vim.FS, this.vim.PATH, this.vim.ERRNO_CODES), 
@@ -92,6 +97,10 @@ VimJS_WW.prototype.load = function(loaded, data_files_config, allow_exit){
       }.bind(this));
     }.bind(this));
   }.bind(this), data_files_config, allow_exit);
+}
+
+VimJS_WW.prototype.destroy = function(){
+  this.ww_bridge.emit('destroy');
 }
 
 VimJS_WW.prototype.load_remotefs = function(url){
