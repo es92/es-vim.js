@@ -21,13 +21,16 @@ var VimJS = function(){
   });
 }
 
-VimJS.prototype.load = function(onloaded, data_files_config){
+VimJS.prototype.load = function(onloaded, data_files_config, allow_exit){
   load_vim(function(vim, start){ 
+    vim.addOnExit(function(){ 
+      this.vim.em_vimjs.emit('exit');
+    }.bind(this));
     this.vim = vim;
     this.FS = this.vim.FS;
     this.ENV = this.vim.ENV;
     onloaded(start);
-  }.bind(this), null, data_files_config);
+  }.bind(this), null, data_files_config, allow_exit);
 }
 
 VimJS.prototype.load_remotefs = function(url){
@@ -68,7 +71,7 @@ VimJS_WW.VIMJS_PASSTHROUGH =
     [ 'handle_key', 'handle_key' ]
   ]
 
-VimJS_WW.prototype.load = function(loaded, data_files_config){
+VimJS_WW.prototype.load = function(loaded, data_files_config, allow_exit){
   this.vim_w = new Worker("vim_ww.js");
   this.ww_bridge = WW_Bridge_Browser(this.vim_w);
 
@@ -88,7 +91,7 @@ VimJS_WW.prototype.load = function(loaded, data_files_config){
         }.bind(this));
       }.bind(this));
     }.bind(this));
-  }.bind(this), data_files_config);
+  }.bind(this), data_files_config, allow_exit);
 }
 
 VimJS_WW.prototype.load_remotefs = function(url){
@@ -97,9 +100,11 @@ VimJS_WW.prototype.load_remotefs = function(url){
 
 // ============================================================
 
-function load_vim(onfsloaded, reject, data_files){
+function load_vim(onfsloaded, reject, data_files, allow_exit){
   if (data_files == null)
     data_files = {};
+  if (allow_exit == null)
+    allow_exit = false;
   if (data_files.memoryFilePath == null)
     data_files.memoryFilePath = 'vim.js.mem';
   if (data_files.binaryFilePath == null)
@@ -125,8 +130,9 @@ function load_vim(onfsloaded, reject, data_files){
         else
           return f;
       },
+      VIMJS_ALLOW_EXIT: allow_exit,
       noInitialRun: true,
-      noExitRuntime: true,
+      noExitRuntime: false,
       arguments: ['/usr/local/share/vim/example.js'],
       postRun: [],
       preRun: [],

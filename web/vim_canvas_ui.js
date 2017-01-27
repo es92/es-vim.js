@@ -145,6 +145,10 @@ function VimCanvas(vim, canvas, config){
     char_height: s.char_height
   });
 
+  vim.em_vimjs.on('exit', function(cb){
+    //TODO do cleanup
+  });
+
   vim.em_vimjs.on('get_window_width', function(cb){
     cb(canvas.width);
   });

@@ -31,7 +31,7 @@
     <script src="tests.js"></script>
     <script>
 
-      var vimjs = new VimJS();
+      var vimjs = new VimJS_WW();
 
       vimjs.load(function(start){
         vimjs.FS.createDataFile('/home/web_user', 'test', true, true, true);
@@ -46,7 +46,7 @@
             finishInit()
           }
         });
-      });
+      }, null, true);
     </script>
   </body>
 </html>
