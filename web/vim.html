@@ -11,16 +11,19 @@
         height: 100%;
       }
 
-      #canvas-parent {
+      .canvas-parent {
         display: inline-block;
         width: 800px;
         height: 400px;
       }
-
     </style>
   </head>
   <body>
-    <div id="canvas-parent">
+    <div class="canvas-parent">
+      <canvas width=800 height=400 tabindex='1'></canvas>
+    </div>
+
+    <div class="canvas-parent">
       <canvas width=800 height=400 tabindex='1'></canvas>
     </div>
 
@@ -31,6 +34,7 @@
     <script src="tests.js"></script>
     <script>
 
+      setTimeout(function(){
       var vimjs = new VimJS_WW();
 
       vimjs.load(function(start){
@@ -47,6 +51,27 @@
           }
         });
       }, null, true);
+      }, 1000);
+
+      setTimeout(function(){
+
+      var vimjs = new VimJS_WW();
+
+      vimjs.load(function(start){
+        vimjs.FS.createDataFile('/home/web_user', 'test', true, true, true);
+        vimjs.FS.writeFile('/home/web_user/test', 'pre-load FS test');
+        var canvas = document.getElementsByTagName('canvas')[1];
+        var vc = new VimCanvas(vimjs, canvas);
+        window.vc = vc;
+        start({
+          initialFile: '/home/web_user/test', 
+          initialPath: '/home/web_user/',
+          oninit: function(finishInit){ 
+            finishInit()
+          }
+        });
+      }, null, true);
+      }, 0);
     </script>
   </body>
 </html>

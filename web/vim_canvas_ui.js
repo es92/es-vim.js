@@ -189,7 +189,7 @@ function VimCanvas(vim, canvas, config){
     page.fillStyle = s.fg_color;
     var cw = s.char_width;
     var ch = s.char_height;
-    page.fillRect(col * cw, (row + 1) * ch - height, width, height);
+    page.fillRect(col * cw, (row + 1) * ch - height+1, width, height-1);
   });
  
   vim.em_vimjs.on('insert_lines', function(num_lines, row1, row2, col1, col2){
