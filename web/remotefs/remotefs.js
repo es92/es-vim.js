@@ -1,5 +1,5 @@
 
-function RemoteFS(url, FS, PATH, ERRNO_CODES){
+function RemoteFS(config, FS, PATH, ERRNO_CODES){
 
   var cached_calls = {}
   var CACHE_INVALID_S = 3;
@@ -39,8 +39,11 @@ function RemoteFS(url, FS, PATH, ERRNO_CODES){
 
     var req = new XMLHttpRequest();
     req.withCredentials = true;
-    req.open("POST", url,  false);
+    req.open("POST", config.url,  false);
     req.setRequestHeader("Content-Type", "application/json;charset=UTF-8");
+    if (config.username != null){
+      req.setRequestHeader("Authorization", "Basic " + btoa(config.username + ':' + config.password));
+    }
     var data = { type: type, name: name, args: JSON.stringify(Array.prototype.slice.call(args)) }
     req.send(JSON.stringify(data));
     var res = JSON.parse(req.responseText);

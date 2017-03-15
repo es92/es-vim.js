@@ -58,11 +58,11 @@ VimJS_WW.VIMJS_PASSTHROUGH.forEach(function passthrough_em_vimjs_fn(names){
     });
   });
 
-ww_bridge.on('load_remotefs', function(url){
+ww_bridge.on('load_remotefs', function(config){
   importScripts('remotefs/remotefs.js');
 
   vimjs.FS.createPath('/home/web_user', 'data', true, true);
-  vimjs.FS.mount(RemoteFS(url, vimjs.FS, vimjs.PATH, vimjs.ERRNO_CODES), 
+  vimjs.FS.mount(RemoteFS(config, vimjs.FS, vimjs.PATH, vimjs.ERRNO_CODES), 
                {root: '/'}, 
                '/home/web_user/data');
 });

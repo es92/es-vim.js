@@ -38,9 +38,9 @@ VimJS.prototype.destroy = function(){
   this.vim.exit();
 }
 
-VimJS.prototype.load_remotefs = function(url){
+VimJS.prototype.load_remotefs = function(config){
   this.vim.FS.createPath('/home/web_user', 'data', true, true);
-  this.vim.FS.mount(RemoteFS(url, this.vim.FS, this.vim.PATH, this.vim.ERRNO_CODES), 
+  this.vim.FS.mount(RemoteFS(config, this.vim.FS, this.vim.PATH, this.vim.ERRNO_CODES), 
                {root: '/'}, 
                '/home/web_user/data');
 }
@@ -103,8 +103,8 @@ VimJS_WW.prototype.destroy = function(){
   this.ww_bridge.emit('destroy');
 }
 
-VimJS_WW.prototype.load_remotefs = function(url){
-  this.ww_bridge.emit('load_remotefs', url);
+VimJS_WW.prototype.load_remotefs = function(config){
+  this.ww_bridge.emit('load_remotefs', config);
 }
 
 // ============================================================
