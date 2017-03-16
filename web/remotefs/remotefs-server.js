@@ -7,6 +7,7 @@ var process = require('process');
 var basicAuth = require('basic-auth');
 var crypto = require('crypto');
 var https = require('https');
+var cookieParser = require('cookie-parser');
 
 function run(){
   var configFile = process.argv[2];
@@ -35,17 +36,20 @@ function RemoteFS(config){
   var key = fs.readFileSync(httpsKeyPath, 'utf8');
   var cert = fs.readFileSync(httpsCertPath, 'utf8');
 
-  app.all('*', function(req, res, next) {
+  app.use(function(req, res, next) {
     var origin = req.get('origin'); 
     res.header('Access-Control-Allow-Origin', origin);
     res.header('Access-Control-Allow-Credentials', 'true');
     res.header("Access-Control-Allow-Methods", "GET,HEAD,OPTIONS,POST,PUT");
     res.header("Access-Control-Allow-Headers", "Origin, X-Requested-With, Content-Type, Accept, Authorization");
-    next();
+    if ('OPTIONS' == req.method){
+      res.sendStatus(200);
+    } else {
+      next();
+    }
   });
 
-  app.use(express.static(path.join(process.cwd(), '../')));
-  app.use(bodyParser.json());
+  app.use(cookieParser());
 
   function hash(name, pass){
     return crypto.createHash("sha256").update(name + "$$" + pass).digest("base64");
@@ -53,9 +57,17 @@ function RemoteFS(config){
 
   var auth = function (req, res, next) {
     function unauthorized(res) {
-      res.set('WWW-Authenticate', 'Basic realm=Authorization Required');
-      return res.send(401);
+      //res.set('WWW-Authenticate', 'Basic realm=Authorization Required');
+      return res.sendStatus(401);
     };
+
+    if (req.cookies.auth != null){
+      if (config.auth_tokens != null){
+        if (config.auth_tokens[req.cookies.auth] != null){
+          return next();
+        }
+      }
+    }
 
     var user = basicAuth(req);
 
@@ -70,7 +82,12 @@ function RemoteFS(config){
     };
   };
 
-  app.post('/call', auth, function(req, res){
+  app.use(express.static(path.join(process.cwd(), '../')));
+  app.use(bodyParser.json());
+
+  app.use(auth);
+
+  app.post('/call', function(req, res){
     var type = req.body.type;
     var name = req.body.name;
     var args = JSON.parse(req.body.args);

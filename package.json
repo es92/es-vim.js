@@ -10,6 +10,7 @@
   "dependencies": {
     "basic-auth": "^1.1.0",
     "body-parser": "^1.15.2",
+    "cookie-parser": "^1.4.3",
     "express": "^4.14.0",
     "read": "^1.0.7"
   },
