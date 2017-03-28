@@ -26,5 +26,5 @@ set tabstop=4
 
 "========== default appearance ==========
 set guifont=12px\ \"Source\ Code\ Pro\"\\,monospace
-colorscheme Darkside
+colorscheme codeschool
 syntax on

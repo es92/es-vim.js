@@ -23,55 +23,29 @@
       <canvas width=800 height=400 tabindex='1'></canvas>
     </div>
 
-    <div class="canvas-parent">
-      <canvas width=800 height=400 tabindex='1'></canvas>
-    </div>
-
     <script src="vim_loader.js"></script>
     <script src="ww_bridge.js"></script>
     <script src="em_vim.js"></script>
     <script src="vim_canvas_ui.js"></script>
     <script src="tests.js"></script>
     <script>
-
-      setTimeout(function(){
-      var vimjs = new VimJS_WW();
-
-      vimjs.load(function(start){
-        vimjs.FS.createDataFile('/home/web_user', 'test', true, true, true);
-        vimjs.FS.writeFile('/home/web_user/test', 'pre-load FS test');
-        var canvas = document.getElementsByTagName('canvas')[0];
-        var vc = new VimCanvas(vimjs, canvas);
-        window.vc = vc;
-        start({
-          initialFile: '/home/web_user/test', 
-          initialPath: '/home/web_user/',
-          oninit: function(finishInit){ 
-            finishInit()
-          }
-        });
-      }, null, true);
-      }, 1000);
-
-      setTimeout(function(){
-
-      var vimjs = new VimJS_WW();
-
-      vimjs.load(function(start){
-        vimjs.FS.createDataFile('/home/web_user', 'test', true, true, true);
-        vimjs.FS.writeFile('/home/web_user/test', 'pre-load FS test');
-        var canvas = document.getElementsByTagName('canvas')[1];
-        var vc = new VimCanvas(vimjs, canvas);
-        window.vc = vc;
-        start({
-          initialFile: '/home/web_user/test', 
-          initialPath: '/home/web_user/',
-          oninit: function(finishInit){ 
-            finishInit()
-          }
-        });
-      }, null, true);
-      }, 0);
+      window.onload = function(){
+        var vimjs = new VimJS_WW();
+        vimjs.load(function(start){
+          vimjs.FS.createDataFile('/home/web_user', 'test', true, true, true);
+          vimjs.FS.writeFile('/home/web_user/test', 'pre-load FS test');
+          var canvas = document.getElementsByTagName('canvas')[0];
+          var vc = new VimCanvas(vimjs, canvas);
+          window.vc = vc;
+          start({
+            initialFile: '/home/web_user/test', 
+            initialPath: '/home/web_user/',
+            oninit: function(finishInit){ 
+              finishInit()
+            }
+          });
+        }, null, true);
+      }
     </script>
   </body>
 </html>

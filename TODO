@@ -1,7 +1,7 @@
 
 ux
   - clipboard ui support
-  - add more colorschemes, syntaxes
+  - add more syntaxes
   - match full textarea api
   - mouse support
   - get BrowserFS working (fails right now on saving existing files)
