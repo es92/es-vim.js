@@ -24,7 +24,39 @@ set expandtab
 set shiftwidth=4
 set tabstop=4
 
+"========== auto set filetype ==========
+
+augroup filetypedetect 
+  au! BufRead,BufNewFile *.cpp set filetype=cpp
+  au! BufRead,BufNewFile *.hs set filetype=haskell
+  au! BufRead,BufNewFile *.java set filetype=java
+  "au! BufRead,BufNewFile *.m set filetype=matlab
+  au! BufRead,BufNewFile *.m set filetype=objc
+  au! BufRead,BufNewFile *.py set filetype=python
+  au! BufRead,BufNewFile *.scala set filetype=scala
+  au! BufRead,BufNewFile *.sml set filetype=sml
+  au! BufRead,BufNewFile *.tex set filetype=tex
+  au! BufRead,BufNewFile *.c set filetype=c
+  au! BufRead,BufNewFile *.html set filetype=html
+  au! BufRead,BufNewFile *.json set filetype=json
+  au! BufRead,BufNewFile *.ocaml set filetype=ocaml
+  au! BufRead,BufNewFile *.rb set filetype=ruby
+  au! BufRead,BufNewFile *.scss set filetype=scss
+  au! BufRead,BufNewFile *.sass set filetype=scss
+  au! BufRead,BufNewFile *.vim set filetype=vim
+  au! BufRead,BufNewFile *.go set filetype=go
+  au! BufRead,BufNewFile *.js set filetype=javascript
+  au! BufRead,BufNewFile *.lua set filetype=lua
+  au! BufRead,BufNewFile *.proto set filetype=proto
+  au! BufRead,BufNewFile *.r set filetype=r
+  au! BufRead,BufNewFile *.sh set filetype=sh
+  au! BufRead,BufNewFile *.bash set filetype=sh
+  au! BufRead,BufNewFile *.xml set filetype=xml
+augroup END 
+
+
 "========== default appearance ==========
 set guifont=12px\ \"Source\ Code\ Pro\"\\,monospace
 colorscheme codeschool
+
 syntax on
