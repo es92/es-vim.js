@@ -28,18 +28,21 @@ function VimCanvas(vim, canvas, config){
   font_node.style.padding = '0';
   document.body.appendChild(font_node);
 
+  let pix_ratio = window.devicePixelRatio != null ? window.devicePixelRatio : 1;
+
   s.font_node = font_node;
 
   window.vim = vim;
-
-  var page = canvas.getContext('2d');
 
   // ===============================================================
   //  API
   // ===============================================================
 
-  canvas.width = canvas.clientWidth;
-  canvas.height = canvas.clientHeight;
+  canvas.width = canvas.clientWidth * pix_ratio;
+  canvas.height = canvas.clientHeight * pix_ratio;
+
+  var page = canvas.getContext('2d');
+  page.setTransform(pix_ratio, 0, 0, pix_ratio, 0, 0);
 
   function resize(w, h){
     _resize(w, h);
@@ -47,10 +50,10 @@ function VimCanvas(vim, canvas, config){
   }
   
   function _vim_resize(w, h){
-    if (w > canvas.width || h > canvas.height){
+    if (w > canvas.clientWidth || h > canvas.clientHeight){
       _resize(w, h);
     }
-    else if (canvas.width - w > s.char_width || canvas.height - h > s.char_height){
+    else if (canvas.clientWidth - w > s.char_width || canvas.clientHeight - h > s.char_height){
       _resize(w, h);
     }
   }
@@ -73,10 +76,13 @@ function VimCanvas(vim, canvas, config){
 
   function _resize(w, h){
     var img_data = page.getImageData(0, 0, canvas.width, canvas.height);
-    canvas.width = w;
-    canvas.height = h;
+    canvas.width = w * pix_ratio;
+    canvas.height = h * pix_ratio;
+
+    page.setTransform(pix_ratio, 0, 0, pix_ratio, 0, 0);
+
     page.fillStyle = sample_avg_color(img_data);
-    page.fillRect(0, 0, canvas.width, canvas.height);
+    page.fillRect(0, 0, canvas.clientWidth, canvas.clientHeight);
 
     page.putImageData(img_data, 0, 0);
   }
@@ -139,8 +145,8 @@ function VimCanvas(vim, canvas, config){
   // ===============================================================
 
   vim.em_vimjs.set_props({
-    window_width: canvas.width,
-    window_height: canvas.height,
+    window_width: canvas.clientWidth,
+    window_height: canvas.clientHeight,
     char_width: s.char_width,
     char_height: s.char_height
   });
@@ -150,11 +156,11 @@ function VimCanvas(vim, canvas, config){
   });
 
   vim.em_vimjs.on('get_window_width', function(cb){
-    cb(canvas.width);
+    cb(canvas.clientWidth);
   });
 
   vim.em_vimjs.on('get_window_height', function(cb){
-    cb(canvas.height);
+    cb(canvas.clientHeight);
   });
 
   vim.em_vimjs.on('get_char_width', function(cb){
@@ -218,7 +224,7 @@ function VimCanvas(vim, canvas, config){
 
   vim.em_vimjs.on('clear_all', function(color){
     page.fillStyle = s.bg_color;
-    page.fillRect(0, 0, canvas.width, canvas.height);
+    page.fillRect(0, 0, canvas.clientWidth, canvas.clientHeight);
   });
 
   vim.em_vimjs.on('set_font', function(font){
