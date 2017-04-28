@@ -8,5 +8,6 @@ ux
 dev
   - get .vim files from a vim distribution (remove from repo)
   - get building from current unmodified vim src
+  - cleaner solution to fixing async resize
 
 

@@ -13,7 +13,7 @@
 
       .canvas-parent {
         display: inline-block;
-        width: 800px;
+        width: 100%;
         height: 400px;
       }
     </style>
@@ -37,13 +37,13 @@
       window.onload = function(){
         var vimjs = new VimJS_WW();
         vimjs.load(function(start){
-          vimjs.FS.createDataFile('/home/web_user', 'test', true, true, true);
-          vimjs.FS.writeFile('/home/web_user/test', 'pre-load FS test');
+          vimjs.FS.createDataFile('/home/web_user', 'test.js', true, true, true);
+          vimjs.FS.writeFile('/home/web_user/test.js', Array(100).join('function(){ console.log("hi"); }\n'));
           var canvas = document.getElementsByTagName('canvas')[0];
           var vc = new VimCanvas(vimjs, canvas);
           window.vc = vc;
           start({
-            initialFile: '/home/web_user/test', 
+            initialFile: '/home/web_user/test.js', 
             initialPath: '/home/web_user/',
             oninit: function(finishInit){ 
               finishInit()

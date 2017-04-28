@@ -17,6 +17,7 @@ see [TODO](/TODO) for planned changes
 To modify the native code and core library you will need:
 - emscripten (working with 1.36.0), cproto, likely others
 - to clone [coolwangu's port of vim](https://github.com/coolwanglu/vim.js/) to native/clean-vim.js
+- to apply [native/main.patch](native/main.patch) to [native/clean-vim.js/src/main.c](native/clean-vim.js/src/main.c)
 - you may need to comment out lines in src/os_web.c relating to `<sys/acl.h>`
 ```
     -# ifdef HAVE_SYS_ACL_H

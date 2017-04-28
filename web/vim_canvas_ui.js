@@ -28,7 +28,7 @@ function VimCanvas(vim, canvas, config){
   font_node.style.padding = '0';
   document.body.appendChild(font_node);
 
-  let pix_ratio = window.devicePixelRatio != null ? window.devicePixelRatio : 1;
+  var pix_ratio = window.devicePixelRatio != null ? window.devicePixelRatio : 1;
 
   s.font_node = font_node;
 
@@ -46,9 +46,9 @@ function VimCanvas(vim, canvas, config){
 
   function resize(w, h){
     _resize(w, h);
-    vim.em_vimjs.gui_resize_shell(w, h);
+    vim.em_vimjs.resize_to_size();
   }
-  
+
   function _vim_resize(w, h){
     if (w > canvas.clientWidth || h > canvas.clientHeight){
       _resize(w, h);

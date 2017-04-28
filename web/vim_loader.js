@@ -8,7 +8,7 @@ if (typeof module !== 'undefined' && typeof module.exports !== 'undefined') {
 
 var VimJS = function(){
   this.em_vimjs = {};
-  var passthrough = [ 'gui_resize_shell', 'handle_key', 'on', 'off', 'set_props' ];
+  var passthrough = [ 'gui_resize_shell', 'gui_web_handle_key', 'resize_to_size', 'handle_key', 'on', 'off', 'set_props' ];
   passthrough.forEach(function(name){
     this.em_vimjs[name] = function(){
       this.vim.em_vimjs[name].apply(this.vim.em_vimjs, arguments);
@@ -73,6 +73,7 @@ VimJS_WW.VIMJS_PASSTHROUGH =
     [ 'on', 'em_vimjs_on' ], 
     [ 'off', 'em_vimjs_off' ], 
     [ 'gui_resize_shell', 'gui_resize_shell' ],
+    [ 'resize_to_size', 'resize_to_size' ],
     [ 'handle_key', 'handle_key' ]
   ]
 

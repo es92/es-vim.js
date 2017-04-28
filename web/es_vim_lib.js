@@ -150,7 +150,11 @@ var LibraryVIM = {
   vimjs_init: function () {
     vimjs.gui_web_handle_key = Module['cwrap']('gui_web_handle_key', null, ['number', 'number', 'number', 'number']);
     vimjs.input_available = Module['cwrap']('input_available', 'number', []);
-    vimjs.gui_resize_shell = Module['cwrap']('gui_resize_shell', null, [ 'number', 'number' ]);
+    vimjs._gui_resize_shell = Module['cwrap']('gui_resize_shell', null, [ 'number', 'number' ]);
+
+    vimjs.resize_to_size = function(){
+      vimjs.handle_key(0, 27, false, false, false, false);
+    }
 
     vimjs.Module = Module;
     vimjs.PATH = PATH;
@@ -377,29 +381,19 @@ var LibraryVIM = {
   },
 
   vimjs_get_window_width: function() {
-    if (vimjs.window_width != null){
-      return vimjs.window_width;
-    }
-    else {
-      return EmterpreterAsync.handle(function(resume) {
-        vimjs.emit('get_window_width', function(window_width){
-          resume(function() { return window_width; });
-        });
+    return EmterpreterAsync.handle(function(resume) {
+      vimjs.emit('get_window_width', function(window_width){
+        resume(function() { return window_width; });
       });
-    }
+    });
   },
 
   vimjs_get_window_height: function() {
-    if (vimjs.window_height != null){
-      return vimjs.window_height;
-    }
-    else {
-      return EmterpreterAsync.handle(function(resume) {
-        vimjs.emit('get_window_height', function(window_height){
-          resume(function() { return window_height; });
-        });
+    return EmterpreterAsync.handle(function(resume) {
+      vimjs.emit('get_window_height', function(window_height){
+        resume(function() { return window_height; });
       });
-    }
+    });
   },
 
   vimjs_check_font: function(font) {
