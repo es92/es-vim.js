@@ -1,3 +1,6 @@
+if (typeof module !== 'undefined' && typeof module.exports !== 'undefined') {
+
+}
 
 function WW_Bridge_Browser(worker){
   var bridge = new WW_Bridge_Helper({
@@ -133,4 +136,10 @@ if (typeof module !== 'undefined' && typeof module.exports !== 'undefined') {
      WW_Bridge_Worker: WW_Bridge_Worker,
      WW_Bridge_Helper: WW_Bridge_Helper,
   }
+}
+
+if (typeof module !== 'undefined' && typeof module.exports !== 'undefined') {
+  module.exports = {
+    WW_Bridge_Browser: WW_Bridge_Browser,
+  };
 }

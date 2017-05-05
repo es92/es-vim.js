@@ -2,6 +2,10 @@
 if (typeof module !== 'undefined' && typeof module.exports !== 'undefined') {
   var RemoteFS = require('./remotefs/remotefs.js');
   var EM_VimJS = require('./em_vim.js');
+
+  if (require('./ww_bridge.js') != null){
+    var WW_Bridge_Browser = require('./ww_bridge.js').WW_Bridge_Browser;
+  }
 }
 
 // ============================================================
@@ -47,7 +51,11 @@ VimJS.prototype.load_remotefs = function(config){
 
 // ============================================================
 
-function VimJS_WW(){
+function VimJS_WW(vim_ww_path){
+  if (vim_ww_path == null){
+    vim_ww_path = './vim_ww.js';
+  }
+  this.vim_ww_path = vim_ww_path;
   this.FS = {
     createDataFile: function(){
       this.ww_bridge.emit_apply('FS_createDataFile', arguments);
@@ -78,7 +86,7 @@ VimJS_WW.VIMJS_PASSTHROUGH =
   ]
 
 VimJS_WW.prototype.load = function(loaded, data_files_config, allow_exit){
-  this.vim_w = new Worker("vim_ww.js");
+  this.vim_w = new Worker(this.vim_ww_path);
   this.ww_bridge = WW_Bridge_Browser(this.vim_w);
 
   this.ww_bridge.emit('load', function(start){
@@ -236,6 +244,6 @@ if (typeof module !== 'undefined' && typeof module.exports !== 'undefined') {
   module.exports = {
     VimJS: VimJS,
     VimJS_WW: VimJS_WW,
-    load_vim: load_vim
+    load_vim: load_vim,
   };
 }
