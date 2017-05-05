@@ -197,6 +197,11 @@ function VimCanvas(vim, canvas, config){
     var ch = s.char_height;
     page.fillRect(col * cw, (row + 1) * ch - height+1, width, height-1);
   });
+
+  function scaled_draw_image(x, y, w, h, dx, dy, dw, dh){
+    var data = page.getImageData(x*pix_ratio, y*pix_ratio, w*pix_ratio, h*pix_ratio);
+    page.putImageData(data, dx*pix_ratio, dy*pix_ratio, 0, 0, dw*pix_ratio, dh*pix_ratio);
+  }
  
   vim.em_vimjs.on('insert_lines', function(num_lines, row1, row2, col1, col2){
     var cw = s.char_width;
@@ -204,9 +209,9 @@ function VimCanvas(vim, canvas, config){
     var x = col1 * cw;
     var w = (col2 - col1 + 1) * cw;
     var h = (row2 - row1 - num_lines + 1) * ch;
-    page.drawImage(canvas, 
-                  x, row1 * ch, w, h,
-                  x, (row1 + num_lines) * ch, w, h);
+
+    scaled_draw_image(x, row1 * ch, w, h,
+                      x, (row1 + num_lines) * ch, w, h);
   });
 
   vim.em_vimjs.on('delete_lines', function(num_lines, row1, row2, col1, col2){
@@ -216,10 +221,9 @@ function VimCanvas(vim, canvas, config){
     var y = (row1 + num_lines) * ch;
     var w = (col2 - col1 + 1) * cw;
     var h = (row2 + 1) * ch - y;
-    page.drawImage(canvas, 
-                  x, y, w, h,
-                  x, row1 * ch, w, h);
 
+    scaled_draw_image(x, y, w, h,
+                      x, row1 * ch, w, h);
   });
 
   vim.em_vimjs.on('clear_all', function(color){
