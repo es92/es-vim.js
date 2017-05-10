@@ -26,15 +26,9 @@ if (!module.parent) {
   run();
 }
 
-function RemoteFS(config){
+function RemoteFS(config, key, cert){
 
   var port = config.port || 8080;
-
-  var httpsKeyPath = config.https_key;
-  var httpsCertPath = config.https_crt;
-
-  var key = fs.readFileSync(httpsKeyPath, 'utf8');
-  var cert = fs.readFileSync(httpsCertPath, 'utf8');
 
   app.use(function(req, res, next) {
     var origin = req.get('origin'); 
