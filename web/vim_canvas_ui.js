@@ -18,19 +18,9 @@ function VimCanvas(vim, canvas, config){
   if (config == null)
     config = {}
 
-  var font_node = document.createElement('span');
-  font_node.style.display = 'inline-block';
-  font_node.style.position = 'absolute';
-  font_node.style.left = '0';
-  font_node.style.top = '0';
-  font_node.style.zIndex = '-10000';
-  font_node.style.visibility = 'hidden';
-  font_node.style.padding = '0';
-  document.body.appendChild(font_node);
+
 
   var pix_ratio = window.devicePixelRatio != null ? window.devicePixelRatio : 1;
-
-  s.font_node = font_node;
 
   window.vim = vim;
 
@@ -263,11 +253,39 @@ function VimCanvas(vim, canvas, config){
   });
 
   vim.em_vimjs.on('set_font', function(font){
+    
     s.font = font;
-    s.font_node.style.font = font;
-    font_node.innerHTML = 'm';
-    s.char_height = s.font_node.clientHeight;
-    s.char_width = s.font_node.clientWidth;
+
+    if (font == '12px monospace'){
+      s.char_height = 14;
+      s.char_width = 7;
+    } else if (font == '12px "Source Code Pro",monospace'){
+      s.char_height = 16;
+      s.char_width = 7;
+    } else {
+
+      // NOTE: the following is super buggy
+      //    1) its inconsistent
+      //    2) it doesn't wait for a font to load before measuring
+      //    3) it doesn't deal with fractional pixel width (see canvas measuretext)
+
+      var font_node = document.createElement('span');
+      font_node.style.display = 'inline-block';
+      font_node.style.position = 'absolute';
+      font_node.style.left = '0';
+      font_node.style.top = '-100px';
+      font_node.style.padding = '0';
+      document.body.appendChild(font_node);
+
+      font_node.style.font = font;
+      font_node.innerHTML = 'm';
+
+      s.char_height = font_node.clientHeight;
+      s.char_width = font_node.clientWidth;
+
+      document.body.removeChild(font_node);
+    }
+
   });
 
   vim.em_vimjs.on('clear_block', clear_block);
