@@ -129,10 +129,21 @@ function VimCanvas(vim, canvas, config){
   // ===============================================================
   //  key events
   // ===============================================================
+
+  // this is to fix a weird bug with some hardware keyboards on ios
+  //    found that keypresses get duplicated on contenteditable
+  //    with my ipad, a bluetooth keyboard, and ios 10
+  var last_keydown = 0;
+  var last_keypress = 0;
   
   canvas.addEventListener('keydown', function(e){
     var handle_keydown = e.keyCode in vim.em_vimjs.keys_to_intercept_upon_keydown;
     handle_keydown = handle_keydown || (e.ctrlKey && e.key !== 'Control');
+
+    if (e.timeStamp <= last_keydown){
+      return;
+    }
+    last_keydown = e.timeStamp;
 
     if (e.keyCode === 32){
       vim.em_vimjs.handle_key(e.charCode, e.keyCode, e.shiftKey, e.ctrlKey, e.altKey, e.metaKey);
@@ -150,6 +161,11 @@ function VimCanvas(vim, canvas, config){
   });
 
   canvas.addEventListener('keypress', function(e){
+    if (e.timeStamp <= last_keypress){
+      return;
+    }
+    last_keypress = e.timeStamp;
+
     if (e.charCode !== 32){
       vim.em_vimjs.handle_key(e.charCode, e.keyCode, e.shiftKey, e.ctrlKey, e.altKey, e.metaKey);
     }
