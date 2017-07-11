@@ -130,6 +130,11 @@ function VimCanvas(vim, canvas, config){
   canvas.addEventListener('keydown', function(e){
     var handle_keydown = e.keyCode in vim.em_vimjs.keys_to_intercept_upon_keydown;
     handle_keydown = handle_keydown || (e.ctrlKey && e.key !== 'Control');
+
+    if (e.keyCode === 32){
+      vim.em_vimjs.handle_key(e.charCode, e.keyCode, e.shiftKey, e.ctrlKey, e.altKey, e.metaKey);
+      e.preventDefault();
+    }
     if (e.key === 'Tab'){
       e.preventDefault();
     }
@@ -142,7 +147,9 @@ function VimCanvas(vim, canvas, config){
   });
 
   canvas.addEventListener('keypress', function(e){
-    vim.em_vimjs.handle_key(e.charCode, e.keyCode, e.shiftKey, e.ctrlKey, e.altKey, e.metaKey);
+    if (e.charCode !== 32){
+      vim.em_vimjs.handle_key(e.charCode, e.keyCode, e.shiftKey, e.ctrlKey, e.altKey, e.metaKey);
+    }
   });
 
   // ===============================================================
