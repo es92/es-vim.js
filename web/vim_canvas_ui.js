@@ -42,6 +42,9 @@ function VimCanvas(vim, canvas, config){
   canvas.height = canvas.clientHeight * pix_ratio;
 
   canvas.contentEditable = true;
+  canvas.autocapitalize = "none";
+  canvas.autocorrect = false;
+  canvas.autocomplete = false;
 
   var page = canvas.getContext('2d');
   page.setTransform(pix_ratio, 0, 0, pix_ratio, 0, 0);
