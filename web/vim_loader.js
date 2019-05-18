@@ -63,6 +63,9 @@ function VimJS_WW(vim_ww_path){
     writeFile: function(){
       this.ww_bridge.emit_apply('FS_writeFile', arguments);
     }.bind(this),
+    readFile: function(){
+      this.ww_bridge.emit_apply('FS_readFile', arguments);
+    }.bind(this),
   }
 
   this.em_vimjs = {};
@@ -114,6 +117,16 @@ VimJS_WW.prototype.destroy = function(){
 
 VimJS_WW.prototype.load_remotefs = function(config){
   this.ww_bridge.emit('load_remotefs', config);
+}
+
+VimJS_WW.prototype.enter_string = function(str){
+  this.ww_bridge.emit('enter_string', str);
+}
+
+
+
+VimJS_WW.prototype.load_eventfs = function(done){
+  this.ww_bridge.emit('load_eventfs', done);
 }
 
 // ============================================================

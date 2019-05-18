@@ -45,6 +45,13 @@ ww_bridge.on('FS_writeFile', function(){
   vimjs.FS.writeFile.apply(null, arguments)
 });
 
+ww_bridge.on('FS_readFile', function(){
+  let args = Array.prototype.slice.call(arguments);
+  let fn = args.pop();
+  let contents = vimjs.FS.readFile.apply(null, args);
+  fn(contents);
+});
+
 ww_bridge.on('destroy', function(){
   vimjs.noExitRuntime = false;
   vimjs.exit();
@@ -65,4 +72,24 @@ ww_bridge.on('load_remotefs', function(config){
   vimjs.FS.mount(RemoteFS(config, vimjs.FS, vimjs.PATH, vimjs.ERRNO_CODES), 
                {root: '/'}, 
                '/home/web_user/data');
+});
+
+ww_bridge.on('enter_string', function(str) {
+  try {
+    for (var i = 0; i < str.length; i++){
+      vimjs.em_vimjs.gui_web_handle_key(str.charCodeAt(i), '', 0, 0)
+    }
+  } catch(e){ console.log(e); }
+});
+
+ww_bridge.on('load_eventfs', function(done){
+  importScripts('eventfs.js');
+
+  let bridge_prefix = 'eventfs_';
+
+  vimjs.FS.createPath('/home/web_user', 'data', true, true);
+  vimjs.FS.mount(EventFS(vimjs.FS, vimjs.ERRNO_CODES, bridge_prefix, ww_bridge), 
+               {root: '/'}, 
+               '/home/web_user/data');
+  done();
 });
