@@ -145,7 +145,7 @@ function VimCanvas(vim, canvas, config){
     if (handle_keydown){
       vim.em_vimjs.handle_key(e.charCode, e.keyCode, e.shiftKey, e.ctrlKey, e.altKey, e.metaKey);
     }
-    if ((!config.keepDefaultKeys) && e.ctrlKey){
+    if ((!config.keepDefaultKeys) && e.ctrlKey && e.key != 'v' && e.key != 'c'){
       e.preventDefault();
     }
   });
